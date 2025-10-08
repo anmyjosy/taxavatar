@@ -1,16 +1,6 @@
-import React from 'react';
+import React, { type ElementType } from 'react';
 import { motion } from 'framer-motion';
-import {
-  Activity,
-  Bot,
-  Brain,
-  Cpu,
-  Headphones,
-  LucideIcon,
-  MessageCircle,
-  Radio,
-  Smile,
-} from 'lucide-react';
+import { Bot, Brain, MessageCircle, Smile } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -225,7 +215,7 @@ const WelcomeLogo = () => (
 );
 
 interface FeaturePillProps {
-  icon: LucideIcon;
+  icon: ElementType;
   text: string;
   index: number;
 }

@@ -7,7 +7,6 @@ import {
   useTracks,
   useVoiceAssistant,
 } from '@livekit/components-react';
-import { ChatInput } from '@/components/livekit/chat/chat-input';
 import { cn } from '@/lib/utils';
 import { VoiceVisualizer } from '../livekit/VoiceVisualizer';
 import { UserTile } from '../livekit/user-tile';

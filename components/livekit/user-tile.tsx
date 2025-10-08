@@ -1,10 +1,5 @@
 import { Track } from 'livekit-client';
-import {
-  BarVisualizer,
-  type TrackReference,
-  VideoTrack,
-  useIsSpeaking,
-} from '@livekit/components-react';
+import { BarVisualizer, type TrackReference, VideoTrack } from '@livekit/components-react';
 import { cn } from '@/lib/utils';
 import { useLocalTrackRef } from './media-tiles';
 
@@ -19,7 +14,6 @@ export const UserTile = ({
   ref,
 }: React.ComponentProps<'div'> & UserTileProps) => {
   const micTrack = useLocalTrackRef(Track.Source.Microphone);
-  const isSpeaking = useIsSpeaking(micTrack?.participant);
 
   return (
     <div ref={ref} className={cn('relative', className)}>

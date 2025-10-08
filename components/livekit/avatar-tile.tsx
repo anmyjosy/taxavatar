@@ -47,3 +47,5 @@ export const AvatarTile = forwardRef<HTMLDivElement, AvatarTileProps>(
     );
   }
 );
+
+AvatarTile.displayName = 'AvatarTile';

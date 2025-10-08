@@ -1,11 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { useCallback } from 'react';
 import { Track } from 'livekit-client';
-import { BarVisualizer, useRemoteParticipants } from '@livekit/components-react';
+import { useRemoteParticipants } from '@livekit/components-react';
 import { ChatTextIcon, PhoneDisconnectIcon } from '@phosphor-icons/react/dist/ssr';
-import { ChatInput } from '@/components/livekit/chat/chat-input';
 import { Button } from '@/components/ui/button';
 import { Toggle } from '@/components/ui/toggle';
 import { AppConfig } from '@/lib/types';
@@ -28,11 +26,9 @@ export interface AgentControlBarProps
 export function AgentControlBar({
   controls,
   saveUserChoices = true,
-  capabilities,
   className,
   onChatOpenChange,
   onDisconnect,
-  onDeviceError,
   ...props
 }: AgentControlBarProps) {
   const participants = useRemoteParticipants();
@@ -42,16 +38,7 @@ export function AgentControlBar({
 
   const [isDisconnecting, setIsDisconnecting] = React.useState(false);
 
-  const {
-    micTrackRef,
-    visibleControls,
-    cameraToggle,
-    microphoneToggle,
-    screenShareToggle,
-    handleAudioDeviceChange,
-    handleVideoDeviceChange,
-    handleDisconnect,
-  } = useAgentControlBar({
+  const { visibleControls, microphoneToggle, handleDisconnect } = useAgentControlBar({
     controls,
     saveUserChoices,
   });
@@ -66,19 +53,6 @@ export function AgentControlBar({
   React.useEffect(() => {
     onChatOpenChange?.(chatOpen);
   }, [chatOpen, onChatOpenChange]);
-
-  const onMicrophoneDeviceSelectError = useCallback(
-    (error: Error) => {
-      onDeviceError?.({ source: Track.Source.Microphone, error });
-    },
-    [onDeviceError]
-  );
-  const onCameraDeviceSelectError = useCallback(
-    (error: Error) => {
-      onDeviceError?.({ source: Track.Source.Camera, error });
-    },
-    [onDeviceError]
-  );
 
   return (
     <div
