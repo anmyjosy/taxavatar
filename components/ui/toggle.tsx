@@ -29,6 +29,7 @@ const toggleVariants = cva(
           'border border-button-border bg-button text-button-foreground',
           'hover:bg-background focus:bg-background',
         ],
+        ghost: 'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
       },
       size: {
         default: 'h-9 px-2 min-w-9',

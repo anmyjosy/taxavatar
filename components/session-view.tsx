@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import {
   type AgentState,
@@ -11,6 +11,7 @@ import {
 import { toastAlert } from '@/components/alert-toast';
 import { AgentControlBar } from '@/components/livekit/agent-control-bar/agent-control-bar';
 import { ChatEntry } from '@/components/livekit/chat/chat-entry';
+import { ChatInput } from '@/components/livekit/chat/chat-input';
 import { ChatMessageView } from '@/components/livekit/chat/chat-message-view';
 import { MediaTiles } from '@/components/livekit/media-tiles';
 import useChatAndTranscription from '@/hooks/useChatAndTranscription';
@@ -37,6 +38,7 @@ export const SessionView = ({
   const { state: agentState } = useVoiceAssistant();
   const [chatOpen, setChatOpen] = useState(false);
   const { messages, send } = useChatAndTranscription();
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const room = useRoomContext();
 
   useDebugMode({
@@ -46,6 +48,12 @@ export const SessionView = ({
   async function handleSendMessage(message: string) {
     await send(message);
   }
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   useEffect(() => {
     if (sessionStarted) {
@@ -83,9 +91,10 @@ export const SessionView = ({
 
   const { supportsChatInput, supportsVideoInput, supportsScreenShare } = appConfig;
   const capabilities = {
-    supportsChatInput,
-    supportsVideoInput,
-    supportsScreenShare,
+    supportsChatInput: supportsChatInput,
+    supportsVideoInput: supportsVideoInput,
+    // screen share is not a common use case for agent-based applications, so we disable it by default
+    supportsScreenShare: false,
   };
 
   return (
@@ -93,43 +102,58 @@ export const SessionView = ({
       ref={ref}
       inert={disabled}
       className={cn(
-        'opacity-0',
-        // prevent page scrollbar
-        // when !chatOpen due to 'translate-y-20'
-        !chatOpen && 'max-h-svh overflow-hidden'
+        'bg-background fixed inset-0 z-20 flex flex-col md:flex-row',
+        !chatOpen && 'max-h-svh overflow-hidden',
+        chatOpen && 'gap-4 p-4'
       )}
     >
-      <ChatMessageView
+      <div
         className={cn(
-          'mx-auto min-h-svh w-full max-w-2xl px-3 pt-32 pb-40 transition-[opacity,translate] duration-300 ease-out md:px-0 md:pt-36 md:pb-48',
-          chatOpen ? 'translate-y-0 opacity-100 delay-200' : 'translate-y-20 opacity-0'
+          'relative flex-1 transition-all duration-300 ease-out',
+          chatOpen ? 'md:w-3/5' : 'w-full'
         )}
       >
-        <div className="space-y-3 whitespace-pre-wrap">
+        <div className="bg-background mp-12 fixed top-0 right-0 left-0 h-28 md:h-32">
+          {/* top glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[60rem] h-[8rem] bg-[#552483]/20 rounded-full blur-[100px] -translate-y-1/2 animate-pulse-glow" />
+        </div>
+        <MediaTiles chatOpen={chatOpen} />
+      </div>
+
+      <ChatMessageView
+        className={cn(
+          'transition-all duration-300 ease-out',
+          'bg-background/30 backdrop-blur-xl rounded-2xl border border-white/10 flex flex-col',
+          chatOpen
+            ? 'relative flex-1 mt-16 h-2/3 w-full md:w-1/3 translate-x-0 opacity-100 delay-200 p-4'
+            : 'absolute w-full -translate-x-full opacity-0'
+        )}
+      >
+        <div
+          ref={chatContainerRef}
+          className="h-full space-y-3 whitespace-pre-wrap overflow-y-auto text-sm scrollbar-thin scrollbar-thumb-accent scrollbar-track-background"
+        >
           <AnimatePresence>
             {messages.map((message: ReceivedChatMessage) => (
               <motion.div
                 key={message.id}
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 1, height: 'auto', translateY: 0.001 }}
-                transition={{ duration: 0.5, ease: 'easeOut' }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
               >
                 <ChatEntry hideName key={message.id} entry={message} />
               </motion.div>
             ))}
           </AnimatePresence>
         </div>
+        <ChatInput
+          onSend={handleSendMessage}
+          disabled={!isAgentAvailable(agentState)}
+          className="mt-4"
+        />
       </ChatMessageView>
 
-      <div className="bg-background mp-12 fixed top-0 right-0 left-0 h-32 md:h-36">
-        {/* skrim */}
-        <div className="from-background absolute bottom-0 left-0 h-12 w-full translate-y-full bg-gradient-to-b to-transparent" />
-      </div>
-
-      <MediaTiles chatOpen={chatOpen} />
-
-      <div className="bg-background fixed right-0 bottom-0 left-0 z-50 px-3 pt-2 pb-3 md:px-12 md:pb-12">
+      <div className="fixed right-0 bottom-0 left-0 z-50">
         <motion.div
           key="control-bar"
           initial={{ opacity: 0, translateY: '100%' }}
@@ -139,7 +163,7 @@ export const SessionView = ({
           }}
           transition={{ duration: 0.3, delay: sessionStarted ? 0.5 : 0, ease: 'easeOut' }}
         >
-          <div className="relative z-10 mx-auto w-full max-w-2xl">
+          <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center gap-2 px-3 pb-3 md:px-6 md:pb-6">
             {appConfig.isPreConnectBufferEnabled && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -153,24 +177,18 @@ export const SessionView = ({
                 }}
                 aria-hidden={messages.length > 0}
                 className={cn(
-                  'absolute inset-x-0 -top-12 text-center',
+                  'text-center',
                   sessionStarted && messages.length === 0 && 'pointer-events-none'
                 )}
               >
-                <p className="animate-text-shimmer inline-block !bg-clip-text text-sm font-semibold text-transparent">
-                  Agent is listening, ask it a question
-                </p>
               </motion.div>
             )}
 
             <AgentControlBar
               capabilities={capabilities}
               onChatOpenChange={setChatOpen}
-              onSendMessage={handleSendMessage}
             />
           </div>
-          {/* skrim */}
-          <div className="from-background border-background absolute top-0 left-0 h-12 w-full -translate-y-full bg-gradient-to-t to-transparent" />
         </motion.div>
       </div>
     </section>

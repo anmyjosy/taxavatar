@@ -1,5 +1,8 @@
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
+import { Headphones, Activity, Brain, Cpu, Radio, LucideIcon, Bot, Smile, MessageCircle } from 'lucide-react';
 
 interface WelcomeProps {
   disabled: boolean;
@@ -11,51 +14,253 @@ export const Welcome = ({
   disabled,
   startButtonText,
   onStartCall,
-  ref,
-}: React.ComponentProps<'div'> & WelcomeProps) => {
+}: WelcomeProps) => {
+  const features = [
+    { icon: Smile, text: 'Lifelike Animation' },
+    { icon: MessageCircle, text: 'Real-time Conversation' },
+    { icon: Brain, text: 'Emotional Expression' },
+  ];
+
   return (
     <section
-      ref={ref}
-      inert={disabled}
       className={cn(
-        'bg-background fixed inset-0 mx-auto flex h-svh flex-col items-center justify-center text-center',
-        disabled ? 'z-10' : 'z-20'
+        'bg-background fixed inset-0 mx-auto flex h-svh flex-col items-center justify-center overflow-hidden',
+        disabled ? 'z-10 pointer-events-none opacity-50' : 'z-20'
       )}
     >
-      <svg
-        width="64"
-        height="64"
-        viewBox="0 0 64 64"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="text-fg0 mb-4 size-16"
-      >
-        <path
-          d="M15 24V40C15 40.7957 14.6839 41.5587 14.1213 42.1213C13.5587 42.6839 12.7956 43 12 43C11.2044 43 10.4413 42.6839 9.87868 42.1213C9.31607 41.5587 9 40.7957 9 40V24C9 23.2044 9.31607 22.4413 9.87868 21.8787C10.4413 21.3161 11.2044 21 12 21C12.7956 21 13.5587 21.3161 14.1213 21.8787C14.6839 22.4413 15 23.2044 15 24ZM22 5C21.2044 5 20.4413 5.31607 19.8787 5.87868C19.3161 6.44129 19 7.20435 19 8V56C19 56.7957 19.3161 57.5587 19.8787 58.1213C20.4413 58.6839 21.2044 59 22 59C22.7956 59 23.5587 58.6839 24.1213 58.1213C24.6839 57.5587 25 56.7957 25 56V8C25 7.20435 24.6839 6.44129 24.1213 5.87868C23.5587 5.31607 22.7956 5 22 5ZM32 13C31.2044 13 30.4413 13.3161 29.8787 13.8787C29.3161 14.4413 29 15.2044 29 16V48C29 48.7957 29.3161 49.5587 29.8787 50.1213C30.4413 50.6839 31.2044 51 32 51C32.7956 51 33.5587 50.6839 34.1213 50.1213C34.6839 49.5587 35 48.7957 35 48V16C35 15.2044 34.6839 14.4413 34.1213 13.8787C33.5587 13.3161 32.7956 13 32 13ZM42 21C41.2043 21 40.4413 21.3161 39.8787 21.8787C39.3161 22.4413 39 23.2044 39 24V40C39 40.7957 39.3161 41.5587 39.8787 42.1213C40.4413 42.6839 41.2043 43 42 43C42.7957 43 43.5587 42.6839 44.1213 42.1213C44.6839 41.5587 45 40.7957 45 40V24C45 23.2044 44.6839 22.4413 44.1213 21.8787C43.5587 21.3161 42.7957 21 42 21ZM52 17C51.2043 17 50.4413 17.3161 49.8787 17.8787C49.3161 18.4413 49 19.2044 49 20V44C49 44.7957 49.3161 45.5587 49.8787 46.1213C50.4413 46.6839 51.2043 47 52 47C52.7957 47 53.5587 46.6839 54.1213 46.1213C54.6839 45.5587 55 44.7957 55 44V20C55 19.2044 54.6839 18.4413 54.1213 17.8787C53.5587 17.3161 52.7957 17 52 17Z"
-          fill="currentColor"
-        />
-      </svg>
+      <WelcomeBackground />
 
-      <p className="text-fg1 max-w-prose pt-1 leading-6 font-medium">
-        Chat live with your voice AI agent
-      </p>
-      <Button variant="primary" size="lg" onClick={onStartCall} className="mt-6 w-64 font-mono">
-        {startButtonText}
-      </Button>
-      <footer className="fixed bottom-5 left-0 z-20 flex w-full items-center justify-center">
-        <p className="text-fg1 max-w-prose pt-1 text-xs leading-5 font-normal text-pretty md:text-sm">
-          Need help getting set up? Check out the{' '}
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://docs.livekit.io/agents/start/voice-ai/"
-            className="underline"
+      <div className="relative z-10 max-w-5xl mx-auto px-8">
+        <WelcomeLogo />
+
+        {/* Title Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+          className="text-center mb-16"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.4 }}
+            className="mb-6"
           >
-            Voice AI quickstart
-          </a>
-          .
-        </p>
-      </footer>
+            <h1 className="text-5xl md:text-6xl font-light tracking-tight mb-2 text-foreground/90">
+              <span>Avatar</span>
+              <span className="text-[#552483] font-normal"> AI</span>
+            </h1>
+            <div className="h-[1px] w-24 mx-auto bg-gradient-to-r from-transparent via-[#552483] to-transparent" />
+          </motion.div>
+
+          <p className="text-base text-muted-foreground font-light max-w-xl mx-auto leading-relaxed">
+            Experience the future of conversational AI with lifelike avatars, ultra-low latency, and natural interactions.
+          </p>
+        </motion.div>
+
+        {/* Feature Pills */}
+        <motion.div
+          className="flex flex-wrap justify-center gap-3 mb-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+        >
+          {features.map((feature, index) => (
+            <FeaturePill key={index} index={index} icon={feature.icon} text={feature.text} />
+          ))}
+        </motion.div>
+
+        {/* CTA Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.8 }}
+          className="relative"
+        >
+          <div className="flex flex-col items-center gap-6">
+            {/* Main CTA */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-[#552483] to-purple-600 rounded-2xl blur-lg opacity-25 group-hover:opacity-40 transition-opacity duration-500" />
+              <Button
+                variant="default"                
+                size="lg"
+                onClick={onStartCall}
+                className="relative px-10 h-12 text-sm bg-gradient-to-r from-[#552483] to-purple-600 text-white hover:brightness-110 border-0 shadow-elegant group overflow-hidden"
+              >
+                <span className="relative z-10 flex items-center gap-3 font-medium">
+                  <Bot className="w-5 h-5" strokeWidth={2} />
+                  {startButtonText}
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 translate-x-[-150%] group-hover:translate-x-[150%] transition-transform duration-700" />
+              </Button>
+            </div>
+
+            {/* Secondary action */}
+          </div>
+        </motion.div>
+      </div>
     </section>
   );
 };
+
+const WelcomeBackground = () => (
+  <>
+    {/* Sophisticated Background */}
+    <div className="absolute inset-0">
+      {/* Gradient mesh */}
+      <div className="absolute inset-0 opacity-40">
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#552483]/30 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-[#552483]/20 rounded-full blur-[120px]" />
+      </div>
+
+      {/* Dot grid pattern */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.2)_1px,transparent_1px)] bg-[size:40px_40px] opacity-[0.15]" />
+      </div>
+
+      {/* Animated lines */}
+      <svg
+        className="absolute inset-0 w-full h-full opacity-20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+            <path
+              d="M 60 0 L 0 0 0 60"
+              fill="none"
+              stroke="#552483"
+              strokeWidth="0.5"
+              opacity="0.5"
+            />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid)" />
+      </svg>
+    </div>
+
+    {/* Floating particles */}
+    <div className="absolute inset-0 overflow-hidden">
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 bg-[#552483]/40 rounded-full"
+          style={{
+            left: `${20 + i * 15}%`,
+            top: `${30 + i * 10}%`,
+          }}
+          animate={{
+            y: [-20, 20, -20],
+            opacity: [0.3, 0.8, 0.3],
+          }}
+          transition={{
+            duration: 4 + i,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: i * 0.5,
+          }}
+        />
+      ))}
+    </div>
+  </>
+);
+
+const WelcomeLogo = () => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.9 }}
+    animate={{ opacity: 1, scale: 1 }}
+    transition={{
+      duration: 0.8,
+      ease: [0.4, 0, 0.2, 1],
+      delay: 0.2,
+    }}
+    className="mb-12 relative group"
+  >
+    <motion.div
+      className="absolute inset-0 bg-gradient-to-r from-[#552483] to-purple-600 rounded-full blur-3xl opacity-20"
+      animate={{
+        scale: [1, 1.1, 1],
+        opacity: [0.2, 0.3, 0.2],
+      }}
+      transition={{
+        duration: 5,
+        repeat: Infinity,
+        ease: 'easeInOut',
+      }}
+    />
+
+    {/* Hexagon container */}
+    <div className="relative mx-auto w-28 h-28">
+      <div className="absolute inset-0 bg-gradient-to-r from-[#552483] to-purple-600 rounded-2xl rotate-45 opacity-10" />
+      <div className="absolute inset-0 bg-background/30 backdrop-blur-xl rounded-2xl rotate-45 border border-[#552483]/20" />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <Bot className="w-10 h-10 text-[#552483] relative z-10" strokeWidth={1.5} />
+      </div>
+
+      {/* Orbiting elements */}
+      {[0, 120, 240].map((rotation, i) => (
+        <motion.div
+          key={i}
+          className="absolute top-1/2 left-1/2 w-2 h-2 -translate-x-1/2 -translate-y-1/2"
+          animate={{
+            rotate: [rotation, rotation + 360],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: 'linear',
+          }}
+        >
+          <div
+            className="absolute w-2 h-2 bg-primary/60 rounded-full"
+            style={{ transform: 'translateX(44px)' }}
+          />
+        </motion.div>
+      ))}
+    </div>
+  </motion.div>
+);
+
+interface FeaturePillProps {
+  icon: LucideIcon;
+  text: string;
+  index: number;
+}
+
+const FeaturePill = ({ icon: Icon, text, index }: FeaturePillProps) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.6 + index * 0.1 }}
+    className="group flex items-center gap-2 px-4 py-2 bg-background/20 backdrop-blur-md rounded-full border border-foreground/10 hover:border-[#552483]/30 hover:bg-background/40 transition-all duration-500"
+  >
+    <Icon className="w-4 h-4 text-[#552483]/70 group-hover:text-[#552483] transition-colors" strokeWidth={1.5} />
+    <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors font-light">
+      {text}
+    </span>
+  </motion.div>
+);
+
+export default Welcome;
+
+/*
+Original component for reference before refactoring.
+
+export const Welcome_Original = ({
+  disabled,
+  startButtonText,
+  onStartCall,
+}: WelcomeProps) => {
+  const features = [
+    { icon: Brain, text: 'Advanced AI Processing' },
+    { icon: Activity, text: 'Real-time Voice Analysis' },
+    { icon: Cpu, text: 'Neural Network Integration' },
+  ];
+
+  return (
+    <section
+      className={cn(
+        'bg-background dark:bg-background light:bg-[#e4d3f6] fixed inset-0 mx-auto flex h-svh flex-col items-center justify-center overflow-hidden',
+        disabled ? 'z-10 pointer-events-none opacity-50' : 'z-20'
+      )}
+    >
+*/
