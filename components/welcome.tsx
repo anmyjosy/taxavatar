@@ -1,8 +1,18 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+import {
+  Activity,
+  Bot,
+  Brain,
+  Cpu,
+  Headphones,
+  LucideIcon,
+  MessageCircle,
+  Radio,
+  Smile,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
-import { Headphones, Activity, Brain, Cpu, Radio, LucideIcon, Bot, Smile, MessageCircle } from 'lucide-react';
 
 interface WelcomeProps {
   disabled: boolean;
@@ -10,11 +20,7 @@ interface WelcomeProps {
   onStartCall: () => void;
 }
 
-export const Welcome = ({
-  disabled,
-  startButtonText,
-  onStartCall,
-}: WelcomeProps) => {
+export const Welcome = ({ disabled, startButtonText, onStartCall }: WelcomeProps) => {
   const features = [
     { icon: Smile, text: 'Lifelike Animation' },
     { icon: MessageCircle, text: 'Real-time Conversation' },
@@ -25,12 +31,12 @@ export const Welcome = ({
     <section
       className={cn(
         'bg-background fixed inset-0 mx-auto flex h-svh flex-col items-center justify-center overflow-hidden',
-        disabled ? 'z-10 pointer-events-none opacity-50' : 'z-20'
+        disabled ? 'pointer-events-none z-10 opacity-50' : 'z-20'
       )}
     >
       <WelcomeBackground />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-8">
+      <div className="relative z-10 mx-auto max-w-5xl px-8">
         <WelcomeLogo />
 
         {/* Title Section */}
@@ -38,7 +44,7 @@ export const Welcome = ({
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
-          className="text-center mb-16"
+          className="mb-16 text-center"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -46,21 +52,22 @@ export const Welcome = ({
             transition={{ delay: 0.4 }}
             className="mb-6"
           >
-            <h1 className="text-5xl md:text-6xl font-light tracking-tight mb-2 text-foreground/90">
+            <h1 className="text-foreground/90 mb-2 text-5xl font-light tracking-tight md:text-6xl">
               <span>Avatar</span>
-              <span className="text-[#552483] font-normal"> AI</span>
+              <span className="font-normal text-[#552483]"> AI</span>
             </h1>
-            <div className="h-[1px] w-24 mx-auto bg-gradient-to-r from-transparent via-[#552483] to-transparent" />
+            <div className="mx-auto h-[1px] w-24 bg-gradient-to-r from-transparent via-[#552483] to-transparent" />
           </motion.div>
 
-          <p className="text-base text-muted-foreground font-light max-w-xl mx-auto leading-relaxed">
-            Experience the future of conversational AI with lifelike avatars, ultra-low latency, and natural interactions.
+          <p className="text-muted-foreground mx-auto max-w-xl text-base leading-relaxed font-light">
+            Experience the future of conversational AI with lifelike avatars, ultra-low latency, and
+            natural interactions.
           </p>
         </motion.div>
 
         {/* Feature Pills */}
         <motion.div
-          className="flex flex-wrap justify-center gap-3 mb-16"
+          className="mb-16 flex flex-wrap justify-center gap-3"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.8 }}
@@ -79,19 +86,19 @@ export const Welcome = ({
         >
           <div className="flex flex-col items-center gap-6">
             {/* Main CTA */}
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-[#552483] to-purple-600 rounded-2xl blur-lg opacity-25 group-hover:opacity-40 transition-opacity duration-500" />
+            <div className="group relative">
+              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#552483] to-purple-600 opacity-25 blur-lg transition-opacity duration-500 group-hover:opacity-40" />
               <Button
-                variant="default"                
+                variant="default"
                 size="lg"
                 onClick={onStartCall}
-                className="relative px-10 h-12 text-sm bg-gradient-to-r from-[#552483] to-purple-600 text-white hover:brightness-110 border-0 shadow-elegant group overflow-hidden"
+                className="shadow-elegant group relative h-12 overflow-hidden border-0 bg-gradient-to-r from-[#552483] to-purple-600 px-10 text-sm text-white hover:brightness-110"
               >
                 <span className="relative z-10 flex items-center gap-3 font-medium">
-                  <Bot className="w-5 h-5" strokeWidth={2} />
+                  <Bot className="h-5 w-5" strokeWidth={2} />
                   {startButtonText}
                 </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 translate-x-[-150%] group-hover:translate-x-[150%] transition-transform duration-700" />
+                <div className="absolute inset-0 translate-x-[-150%] -skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-[150%]" />
               </Button>
             </div>
 
@@ -109,8 +116,8 @@ const WelcomeBackground = () => (
     <div className="absolute inset-0">
       {/* Gradient mesh */}
       <div className="absolute inset-0 opacity-40">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#552483]/30 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-[#552483]/20 rounded-full blur-[120px]" />
+        <div className="absolute top-0 left-1/4 h-[500px] w-[500px] rounded-full bg-[#552483]/30 blur-[120px]" />
+        <div className="absolute right-1/4 bottom-0 h-[500px] w-[500px] rounded-full bg-[#552483]/20 blur-[120px]" />
       </div>
 
       {/* Dot grid pattern */}
@@ -119,10 +126,7 @@ const WelcomeBackground = () => (
       </div>
 
       {/* Animated lines */}
-      <svg
-        className="absolute inset-0 w-full h-full opacity-20"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg className="absolute inset-0 h-full w-full opacity-20" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
             <path
@@ -143,7 +147,7 @@ const WelcomeBackground = () => (
       {[...Array(6)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-1 h-1 bg-[#552483]/40 rounded-full"
+          className="absolute h-1 w-1 rounded-full bg-[#552483]/40"
           style={{
             left: `${20 + i * 15}%`,
             top: `${30 + i * 10}%`,
@@ -173,10 +177,10 @@ const WelcomeLogo = () => (
       ease: [0.4, 0, 0.2, 1],
       delay: 0.2,
     }}
-    className="mb-12 relative group"
+    className="group relative mb-12"
   >
     <motion.div
-      className="absolute inset-0 bg-gradient-to-r from-[#552483] to-purple-600 rounded-full blur-3xl opacity-20"
+      className="absolute inset-0 rounded-full bg-gradient-to-r from-[#552483] to-purple-600 opacity-20 blur-3xl"
       animate={{
         scale: [1, 1.1, 1],
         opacity: [0.2, 0.3, 0.2],
@@ -189,18 +193,18 @@ const WelcomeLogo = () => (
     />
 
     {/* Hexagon container */}
-    <div className="relative mx-auto w-28 h-28">
-      <div className="absolute inset-0 bg-gradient-to-r from-[#552483] to-purple-600 rounded-2xl rotate-45 opacity-10" />
-      <div className="absolute inset-0 bg-background/30 backdrop-blur-xl rounded-2xl rotate-45 border border-[#552483]/20" />
+    <div className="relative mx-auto h-28 w-28">
+      <div className="absolute inset-0 rotate-45 rounded-2xl bg-gradient-to-r from-[#552483] to-purple-600 opacity-10" />
+      <div className="bg-background/30 absolute inset-0 rotate-45 rounded-2xl border border-[#552483]/20 backdrop-blur-xl" />
       <div className="absolute inset-0 flex items-center justify-center">
-        <Bot className="w-10 h-10 text-[#552483] relative z-10" strokeWidth={1.5} />
+        <Bot className="relative z-10 h-10 w-10 text-[#552483]" strokeWidth={1.5} />
       </div>
 
       {/* Orbiting elements */}
       {[0, 120, 240].map((rotation, i) => (
         <motion.div
           key={i}
-          className="absolute top-1/2 left-1/2 w-2 h-2 -translate-x-1/2 -translate-y-1/2"
+          className="absolute top-1/2 left-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2"
           animate={{
             rotate: [rotation, rotation + 360],
           }}
@@ -211,7 +215,7 @@ const WelcomeLogo = () => (
           }}
         >
           <div
-            className="absolute w-2 h-2 bg-primary/60 rounded-full"
+            className="bg-primary/60 absolute h-2 w-2 rounded-full"
             style={{ transform: 'translateX(44px)' }}
           />
         </motion.div>
@@ -231,10 +235,13 @@ const FeaturePill = ({ icon: Icon, text, index }: FeaturePillProps) => (
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay: 0.6 + index * 0.1 }}
-    className="group flex items-center gap-2 px-4 py-2 bg-background/20 backdrop-blur-md rounded-full border border-foreground/10 hover:border-[#552483]/30 hover:bg-background/40 transition-all duration-500"
+    className="group bg-background/20 border-foreground/10 hover:bg-background/40 flex items-center gap-2 rounded-full border px-4 py-2 backdrop-blur-md transition-all duration-500 hover:border-[#552483]/30"
   >
-    <Icon className="w-4 h-4 text-[#552483]/70 group-hover:text-[#552483] transition-colors" strokeWidth={1.5} />
-    <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors font-light">
+    <Icon
+      className="h-4 w-4 text-[#552483]/70 transition-colors group-hover:text-[#552483]"
+      strokeWidth={1.5}
+    />
+    <span className="text-muted-foreground group-hover:text-foreground text-xs font-light transition-colors">
       {text}
     </span>
   </motion.div>

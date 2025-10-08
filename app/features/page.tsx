@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Brain, Cpu, Headphones, MessageCircle, Radio, Smile } from 'lucide-react';
 import { Navbar } from '@/app/components/Navbar';
-import { Smile, MessageCircle, Brain, Cpu, Radio, Headphones } from 'lucide-react';
 
 interface Feature {
   icon: React.ElementType;
@@ -48,9 +48,9 @@ export const Features = () => {
   return (
     <>
       <Navbar />
-      <section className="bg-background min-h-screen flex flex-col items-center py-10 px-8 mt-8 ">
+      <section className="bg-background mt-8 flex min-h-screen flex-col items-center px-8 py-10">
         <motion.h2
-          className="text-4xl md:text-5xl font-bold text-foreground mb-12 text-center"
+          className="text-foreground mb-12 text-center text-4xl font-bold md:text-5xl"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -58,18 +58,18 @@ export const Features = () => {
           Features
         </motion.h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl w-full">
+        <div className="grid w-full max-w-6xl grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, i) => (
             <motion.div
               key={i}
-              className="p-6 bg-background/20 backdrop-blur-md rounded-2xl border border-foreground/10 hover:border-purple-600 hover:bg-background/40 transition-all duration-500 flex flex-col items-center text-center"
+              className="bg-background/20 border-foreground/10 hover:bg-background/40 flex flex-col items-center rounded-2xl border p-6 text-center backdrop-blur-md transition-all duration-500 hover:border-purple-600"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 * i }}
             >
-              <feature.icon className="w-10 h-10 mb-4 text-purple-600" strokeWidth={2} />
-              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-              <p className="text-sm text-muted-foreground">{feature.description}</p>
+              <feature.icon className="mb-4 h-10 w-10 text-purple-600" strokeWidth={2} />
+              <h3 className="mb-2 text-xl font-semibold">{feature.title}</h3>
+              <p className="text-muted-foreground text-sm">{feature.description}</p>
             </motion.div>
           ))}
         </div>

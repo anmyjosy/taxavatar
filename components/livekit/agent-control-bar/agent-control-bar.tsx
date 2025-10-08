@@ -96,8 +96,10 @@ export function AgentControlBar({
             disabled={microphoneToggle.pending}
             onPressedChange={microphoneToggle.toggle}
             className={cn(
-              'h-12 w-12 flex items-center justify-center rounded-full transition',
-              microphoneToggle.enabled ? 'bg-accent text-accent-foreground' : 'bg-accent/50 text-accent-foreground'
+              'flex h-12 w-12 items-center justify-center rounded-full transition',
+              microphoneToggle.enabled
+                ? 'bg-accent text-accent-foreground'
+                : 'bg-accent/50 text-accent-foreground'
             )}
           />
         )}
@@ -111,7 +113,7 @@ export function AgentControlBar({
             onPressedChange={setChatOpen}
             disabled={!isAgentAvailable}
             className={cn(
-              'h-12 w-12 flex items-center justify-center rounded-full transition',
+              'flex h-12 w-12 items-center justify-center rounded-full transition',
               chatOpen ? 'bg-accent text-accent-foreground' : 'bg-accent/50 text-accent-foreground'
             )}
           >

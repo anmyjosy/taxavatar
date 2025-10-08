@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import { type TrackReference } from "@livekit/components-react";
+import React, { useEffect, useRef } from 'react';
+import { type TrackReference } from '@livekit/components-react';
 
 interface VoiceVisualizerProps {
   trackRef: TrackReference;
@@ -25,7 +25,7 @@ export function VoiceVisualizer({ trackRef }: VoiceVisualizerProps) {
 
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d")!;
+    const ctx = canvas.getContext('2d')!;
     let animationFrame: number;
 
     const resizeCanvas = () => {
@@ -33,7 +33,7 @@ export function VoiceVisualizer({ trackRef }: VoiceVisualizerProps) {
       canvas.height = canvas.offsetHeight;
     };
     resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener('resize', resizeCanvas);
 
     const draw = () => {
       analyser.getByteFrequencyData(dataArray);
@@ -46,12 +46,12 @@ export function VoiceVisualizer({ trackRef }: VoiceVisualizerProps) {
 
       for (let i = 0; i < bufferLength; i++) {
         // keep bars small (max 30% of canvas height)
-        let barHeight = ((dataArray[i] / 255) * canvas.height) * 0.3;
+        let barHeight = (dataArray[i] / 255) * canvas.height * 0.3;
 
         // ensure at least baseline height
         barHeight = Math.max(barHeight, minHeight);
 
-        ctx.fillStyle = "white";
+        ctx.fillStyle = 'white';
         ctx.beginPath();
         ctx.roundRect(
           x,
@@ -72,17 +72,14 @@ export function VoiceVisualizer({ trackRef }: VoiceVisualizerProps) {
 
     return () => {
       cancelAnimationFrame(animationFrame);
-      window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener('resize', resizeCanvas);
       audioContext.close();
     };
   }, [trackRef]);
 
   return (
-    <div className="w-full flex justify-center mt-4">
-      <canvas
-        ref={canvasRef}
-        className="w-2/5 h-16 rounded-full bg-transparent"
-      />
+    <div className="mt-4 flex w-full justify-center">
+      <canvas ref={canvasRef} className="h-16 w-2/5 rounded-full bg-transparent" />
     </div>
   );
 }

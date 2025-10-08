@@ -115,7 +115,7 @@ export const SessionView = ({
       >
         <div className="bg-background mp-12 fixed top-0 right-0 left-0 h-28 md:h-32">
           {/* top glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[60rem] h-[8rem] bg-[#552483]/20 rounded-full blur-[100px] -translate-y-1/2 animate-pulse-glow" />
+          <div className="animate-pulse-glow absolute top-0 left-1/2 h-[8rem] w-full max-w-[60rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#552483]/20 blur-[100px]" />
         </div>
         <MediaTiles chatOpen={chatOpen} />
       </div>
@@ -123,15 +123,15 @@ export const SessionView = ({
       <ChatMessageView
         className={cn(
           'transition-all duration-300 ease-out',
-          'bg-background/30 backdrop-blur-xl rounded-2xl border border-white/10 flex flex-col',
+          'bg-background/30 flex flex-col rounded-2xl border border-white/10 backdrop-blur-xl',
           chatOpen
-            ? 'relative flex-1 mt-16 h-2/3 w-full md:w-1/3 translate-x-0 opacity-100 delay-200 p-4'
+            ? 'relative mt-16 h-2/3 w-full flex-1 translate-x-0 p-4 opacity-100 delay-200 md:w-1/3'
             : 'absolute w-full -translate-x-full opacity-0'
         )}
       >
         <div
           ref={chatContainerRef}
-          className="h-full space-y-3 whitespace-pre-wrap overflow-y-auto text-sm scrollbar-thin scrollbar-thumb-accent scrollbar-track-background"
+          className="scrollbar-thin scrollbar-thumb-accent scrollbar-track-background h-full space-y-3 overflow-y-auto text-sm whitespace-pre-wrap"
         >
           <AnimatePresence>
             {messages.map((message: ReceivedChatMessage) => (
@@ -180,14 +180,10 @@ export const SessionView = ({
                   'text-center',
                   sessionStarted && messages.length === 0 && 'pointer-events-none'
                 )}
-              >
-              </motion.div>
+              ></motion.div>
             )}
 
-            <AgentControlBar
-              capabilities={capabilities}
-              onChatOpenChange={setChatOpen}
-            />
+            <AgentControlBar capabilities={capabilities} onChatOpenChange={setChatOpen} />
           </div>
         </motion.div>
       </div>

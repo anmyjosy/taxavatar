@@ -1,10 +1,10 @@
-import {
-  type TrackReference,
-  BarVisualizer,
-  useIsSpeaking,
-  VideoTrack,
-} from '@livekit/components-react';
 import { Track } from 'livekit-client';
+import {
+  BarVisualizer,
+  type TrackReference,
+  VideoTrack,
+  useIsSpeaking,
+} from '@livekit/components-react';
 import { cn } from '@/lib/utils';
 import { useLocalTrackRef } from './media-tiles';
 
@@ -27,7 +27,7 @@ export const UserTile = ({
       <div className="relative aspect-square w-full overflow-hidden rounded-full">
         <VideoTrack
           trackRef={videoTrack}
-          className="absolute left-1/2 top-1/2 h-full w-auto -translate-x-1/2 -translate-y-1/2"
+          className="absolute top-1/2 left-1/2 h-full w-auto -translate-x-1/2 -translate-y-1/2"
         />
       </div>
 

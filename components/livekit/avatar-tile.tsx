@@ -1,7 +1,7 @@
-import { forwardRef } from "react";
-import { type AgentState, type TrackReference, VideoTrack } from "@livekit/components-react";
-import { cn } from "@/lib/utils";
-import styles from "./avatar-tile.module.css";
+import { forwardRef } from 'react';
+import { type AgentState, type TrackReference, VideoTrack } from '@livekit/components-react';
+import { cn } from '@/lib/utils';
+import styles from './avatar-tile.module.css';
 
 interface AvatarTileProps {
   videoTrack: TrackReference;
@@ -10,8 +10,8 @@ interface AvatarTileProps {
 }
 
 export const AvatarTile = forwardRef<HTMLDivElement, AvatarTileProps>(
-  ({ videoTrack, className, state = "idle" }, ref) => {
-    const isSpeaking = state === "speaking";
+  ({ videoTrack, className, state = 'idle' }, ref) => {
+    const isSpeaking = state === 'speaking';
 
     return (
       <div className="relative flex items-center justify-center">
@@ -19,8 +19,8 @@ export const AvatarTile = forwardRef<HTMLDivElement, AvatarTileProps>(
         {isSpeaking && (
           <div
             className={cn(
-              "absolute rounded-full",
-              "h-72 w-72 sm:h-80 sm:w-80", // always square
+              'absolute rounded-full',
+              'h-72 w-72 sm:h-80 sm:w-80', // always square
               styles.glow
             )}
           />
@@ -30,9 +30,9 @@ export const AvatarTile = forwardRef<HTMLDivElement, AvatarTileProps>(
         <div
           ref={ref}
           className={cn(
-            "relative rounded-full overflow-hidden border-2 aspect-square", // 👈 forces circle
-            "h-56 w-56 sm:h-72 sm:w-72", // same ratio across devices
-            isSpeaking ? "border-transparent" : "border-gray-600",
+            'relative aspect-square overflow-hidden rounded-full border-2', // 👈 forces circle
+            'h-56 w-56 sm:h-72 sm:w-72', // same ratio across devices
+            isSpeaking ? 'border-transparent' : 'border-gray-600',
             className
           )}
         >
@@ -40,7 +40,7 @@ export const AvatarTile = forwardRef<HTMLDivElement, AvatarTileProps>(
             trackRef={videoTrack}
             width={videoTrack?.publication.dimensions?.width ?? 0}
             height={videoTrack?.publication.dimensions?.height ?? 0}
-            className="w-full h-full object-cover rounded-full aspect-square" // 👈 locks circle
+            className="aspect-square h-full w-full rounded-full object-cover" // 👈 locks circle
           />
         </div>
       </div>
