@@ -11,7 +11,7 @@ interface Feature {
   description: string;
 }
 
-export const Features = () => {
+const Features = () => {
   const features: Feature[] = [
     {
       icon: Smile,
