@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Track } from 'livekit-client';
 import {
@@ -39,6 +39,26 @@ export function useLocalTrackRef(source: Track.Source) {
   return trackRef;
 }
 
+function useIsMobile(width = 740) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < width);
+    }
+
+    handleResize(); // Set initial value
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [width]);
+
+  return isMobile;
+}
+
 interface MediaTilesProps {
   chatOpen: boolean;
 }
@@ -50,6 +70,7 @@ export function MediaTiles({ chatOpen }: MediaTilesProps) {
     videoTrack: agentVideoTrack,
   } = useVoiceAssistant();
 
+  const isMobile = useIsMobile();
   const micTrack = useLocalTrackRef(Track.Source.Microphone);
   const [screenShareTrack] = useTracks([Track.Source.ScreenShare]);
   const cameraTrack: TrackReference | undefined = useLocalTrackRef(Track.Source.Camera);
@@ -71,6 +92,59 @@ export function MediaTiles({ chatOpen }: MediaTilesProps) {
   const avatarAnimate = { ...animationProps.animate, transition };
   const isAvatar = agentVideoTrack !== undefined;
 
+  if (isMobile && chatOpen) {
+    return (
+      <div className="pointer-events-none absolute inset-0 z-50">
+        <div className="relative mx-auto h-full max-w-full px-4 pt-26 md:px-0">
+          <div className="grid h-full grid-cols-1 items-start justify-center gap-4">
+            {/* Agent/Avatar */}
+            <div className="flex flex-col items-center justify-start">
+              <AnimatePresence mode="popLayout">
+                {!isAvatar && (
+                  <MotionAgentTile
+                    key="agent"
+                    layoutId="agent"
+                    {...animationProps}
+                    animate={agentAnimate}
+                    transition={transition}
+                    state={agentState}
+                    audioTrack={agentAudioTrack}
+                    className="h-[80px]"
+                  />
+                )}
+                {isAvatar && (
+                  <MotionAvatarTile
+                    key="avatar"
+                    layoutId="avatar"
+                    {...animationProps}
+                    animate={avatarAnimate}
+                    transition={transition}
+                    videoTrack={agentVideoTrack}
+                    state={agentState}
+                    className="h-40 w-40"
+                  />
+                )}
+              </AnimatePresence>
+            </div>
+            {/* User */}
+            <div className="flex flex-col items-center justify-start">
+              {cameraTrack && isCameraEnabled && (
+                <MotionUserTile
+                  key="user-camera"
+                  layout="position"
+                  layoutId="camera"
+                  {...animationProps}
+                  videoTrack={cameraTrack}
+                  transition={transition}
+                  className="h-40 w-40"
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="pointer-events-none absolute inset-0 z-50">
       <div className="relative mx-auto h-full max-w-full px-4 md:px-0">

@@ -10,9 +10,9 @@ export const APP_CONFIG_DEFAULTS: AppConfig = {
   supportsScreenShare: true,
   isPreConnectBufferEnabled: true,
 
-  logo: '',
+  logo: '/10xDS-logo.svg',
   accent: '#002cf2',
-  logoDark: '',
+  logoDark: '/10xDS-logo.svg',
   accentDark: '#1fd5f9',
   startButtonText: 'Start call',
 

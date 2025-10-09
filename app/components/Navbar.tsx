@@ -1,7 +1,7 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Radio } from 'lucide-react';
 
 export const Navbar = () => {
   return (
@@ -23,16 +23,23 @@ export const Navbar = () => {
             >
               <div className="relative">
                 <div className="bg-gradient-primary absolute inset-0 rounded-lg opacity-20 blur-lg" />
-                <div className="bg-gradient-primary relative flex h-10 w-10 items-center justify-center rounded-lg">
-                  <Radio className="text-primary-foreground h-5 w-5" strokeWidth={2} />
-                </div>
+                <Image
+                  src="/10xDS-logo.svg"
+                  alt="10xds Logo"
+                  width={200}
+                  height={200}
+                  className="relative h-20 w-20 rounded-lg object-contain"
+                />
               </div>
             </motion.div>
+            <div>
+              
+            </div>
 
             {/* Branding on the right */}
             <div>
-              <h1 className="text-foreground text-xl font-semibold">Avatar AI</h1>
-              <p className="text-muted-foreground -mt-1 text-xs">Enterprise Intelligence</p>
+              <h1 className="text-foreground text-lg font-semibold md:text-xl">Avatar AI</h1>
+              <p className="text-muted-foreground -mt-1 text-[11px] md:text-xs">Enterprise Intelligence</p>
             </div>
           </div>
         </nav>
