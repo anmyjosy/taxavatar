@@ -110,10 +110,10 @@ export function MediaTiles({ chatOpen }: MediaTilesProps) {
                     transition={transition}
                     videoTrack={agentVideoTrack}
                     state={agentState}
-                    className={cn(chatOpen ? 'h-[80px]' : 'h-auto w-full')}
+                    className={cn(chatOpen ? 'h-40 w-40' : 'h-auto w-full')}
                   />
                   {micTrack && (
-                    <div className="mt-4 flex w-full justify-center">
+                    <div className="flex w-full justify-center">
                       <VoiceVisualizer trackRef={micTrack} />
                     </div>
                   )}

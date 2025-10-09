@@ -125,7 +125,7 @@ export const SessionView = ({
           'transition-all duration-300 ease-out',
           'bg-background/30 flex flex-col rounded-2xl border border-white/10 backdrop-blur-xl',
           chatOpen
-            ? 'relative mt-16 h-2/3 w-full flex-1 translate-x-0 p-4 opacity-100 delay-200 md:w-1/3'
+            ? 'relative mt-4 h-2/3 w-full flex-1 translate-x-0 p-4 opacity-100 delay-200 md:mt-16 md:w-1/3'
             : 'absolute w-full -translate-x-full opacity-0'
         )}
       >

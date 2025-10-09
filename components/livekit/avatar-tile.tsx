@@ -31,7 +31,7 @@ export const AvatarTile = forwardRef<HTMLDivElement, AvatarTileProps>(
           ref={ref}
           className={cn(
             'relative aspect-square overflow-hidden rounded-full border-2', // 👈 forces circle
-            'h-56 w-56 sm:h-72 sm:w-72', // same ratio across devices
+            'h-48 w-48 sm:h-56 sm:w-56 md:h-72 md:w-72', // responsive sizing
             isSpeaking ? 'border-transparent' : 'border-gray-600',
             className
           )}
