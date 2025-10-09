@@ -120,40 +120,36 @@ export const SessionView = ({
     >
       {/* --- MOBILE CHAT ABOVE AVATAR --- */}
       {/* --- MOBILE CHAT (REDUCED HEIGHT, FLOATING ABOVE AVATAR) --- */}
-{isMobile && chatOpen && (
-  <ChatMessageView
-    className={cn(
-      'transition-all duration-300 ease-out bg-background/40 flex flex-col rounded-2xl border border-white/10 backdrop-blur-xl shadow-xl',
-      'fixed bottom-[6rem] left-0 right-0 mx-4 z-40 h-[45vh] translate-y-0 opacity-100 delay-200'
-    )}
-  >
-    <div
-      ref={chatContainerRef}
-      className="scrollbar-thin scrollbar-thumb-accent scrollbar-track-background flex-1 space-y-3 overflow-y-auto text-sm whitespace-pre-wrap p-4"
-    >
-      <AnimatePresence>
-        {messages.map((message: ReceivedChatMessage) => (
-          <motion.div
-            key={message.id}
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
+      {isMobile && chatOpen && (
+        <ChatMessageView
+          className={cn(
+            'bg-background/40 flex flex-col rounded-2xl border border-white/10 shadow-xl backdrop-blur-xl transition-all duration-300 ease-out',
+            'fixed right-0 bottom-[6rem] left-0 z-40 mx-4 h-[45vh] translate-y-0 opacity-100 delay-200'
+          )}
+        >
+          <div
+            ref={chatContainerRef}
+            className="scrollbar-thin scrollbar-thumb-accent scrollbar-track-background flex-1 space-y-3 overflow-y-auto p-4 text-sm whitespace-pre-wrap"
           >
-            <ChatEntry hideName key={message.id} entry={message} />
-          </motion.div>
-        ))}
-      </AnimatePresence>
-    </div>
+            <AnimatePresence>
+              {messages.map((message: ReceivedChatMessage) => (
+                <motion.div
+                  key={message.id}
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                >
+                  <ChatEntry hideName key={message.id} entry={message} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
 
-    <div className="border-t border-white/10 bg-background/70 backdrop-blur-lg p-3">
-      <ChatInput
-        onSend={handleSendMessage}
-        disabled={!isAgentAvailable(agentState)}
-      />
-    </div>
-  </ChatMessageView>
-)}
-
+          <div className="bg-background/70 border-t border-white/10 p-3 backdrop-blur-lg">
+            <ChatInput onSend={handleSendMessage} disabled={!isAgentAvailable(agentState)} />
+          </div>
+        </ChatMessageView>
+      )}
 
       {/* --- MEDIA TILES --- */}
       <div

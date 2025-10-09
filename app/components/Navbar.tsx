@@ -32,14 +32,14 @@ export const Navbar = () => {
                 />
               </div>
             </motion.div>
-            <div>
-              
-            </div>
+            <div />
 
             {/* Branding on the right */}
             <div>
               <h1 className="text-foreground text-lg font-semibold md:text-xl">Avatar AI</h1>
-              <p className="text-muted-foreground -mt-1 text-[11px] md:text-xs">Enterprise Intelligence</p>
+              <p className="text-muted-foreground -mt-1 text-[11px] md:text-xs">
+                Enterprise Intelligence
+              </p>
             </div>
           </div>
         </nav>
