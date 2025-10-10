@@ -1,11 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { type TrackReference } from '@livekit/components-react';
+import { cn } from '@/lib/utils';
 
-interface VoiceVisualizerProps {
+interface VoiceVisualizerProps extends React.HTMLAttributes<HTMLDivElement> {
   trackRef: TrackReference;
 }
 
-export function VoiceVisualizer({ trackRef }: VoiceVisualizerProps) {
+export function VoiceVisualizer({ trackRef, className }: VoiceVisualizerProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -36,6 +37,10 @@ export function VoiceVisualizer({ trackRef }: VoiceVisualizerProps) {
     window.addEventListener('resize', resizeCanvas);
 
     const draw = () => {
+      // Get color from CSS custom property
+      const style = getComputedStyle(canvas);
+      const barColor = style.getPropertyValue('--visualizer-color').trim() || 'white';
+
       analyser.getByteFrequencyData(dataArray);
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -51,7 +56,7 @@ export function VoiceVisualizer({ trackRef }: VoiceVisualizerProps) {
         // ensure at least baseline height
         barHeight = Math.max(barHeight, minHeight);
 
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = barColor;
         ctx.beginPath();
         ctx.roundRect(
           x,
@@ -78,7 +83,7 @@ export function VoiceVisualizer({ trackRef }: VoiceVisualizerProps) {
   }, [trackRef]);
 
   return (
-    <div className="mt-4 flex w-full justify-center">
+    <div className={cn('mt-4 flex w-full justify-center', className)}>
       <canvas ref={canvasRef} className="h-16 w-2/5 rounded-full bg-transparent" />
     </div>
   );

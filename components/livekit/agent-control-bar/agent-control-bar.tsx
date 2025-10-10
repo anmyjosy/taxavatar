@@ -71,9 +71,10 @@ export function AgentControlBar({
             onPressedChange={microphoneToggle.toggle}
             className={cn(
               'flex h-12 w-12 items-center justify-center rounded-full transition',
+              // light mode
               microphoneToggle.enabled
-                ? 'bg-accent text-accent-foreground'
-                : 'bg-accent/50 text-accent-foreground'
+                ? 'dark:bg-accent dark:text-accent-foreground bg-gray-900 text-white'
+                : 'dark:bg-accent/50 dark:text-accent-foreground bg-gray-900/70 text-white'
             )}
           />
         )}
@@ -88,7 +89,10 @@ export function AgentControlBar({
             disabled={!isAgentAvailable}
             className={cn(
               'flex h-12 w-12 items-center justify-center rounded-full transition',
-              chatOpen ? 'bg-accent text-accent-foreground' : 'bg-accent/50 text-accent-foreground'
+              // light mode
+              chatOpen
+                ? 'dark:bg-accent dark:text-accent-foreground bg-gray-900 text-white'
+                : 'dark:bg-accent/50 dark:text-accent-foreground bg-gray-900/70 text-white'
             )}
           >
             <ChatTextIcon weight="bold" size={24} />

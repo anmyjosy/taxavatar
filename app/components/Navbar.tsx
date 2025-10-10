@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export const Navbar = () => {
   return (
@@ -32,14 +33,16 @@ export const Navbar = () => {
                 />
               </div>
             </motion.div>
-            <div />
 
             {/* Branding on the right */}
-            <div>
-              <h1 className="text-foreground text-lg font-semibold md:text-xl">Avatar AI</h1>
-              <p className="text-muted-foreground -mt-1 text-[11px] md:text-xs">
-                Enterprise Intelligence
-              </p>
+            <div className="flex items-center gap-4">
+              <div className="text-right">
+                <h1 className="text-foreground text-lg font-semibold md:text-xl">Avatar AI</h1>
+                <p className="text-muted-foreground -mt-1 text-[11px] md:text-xs">
+                  Enterprise Intelligence
+                </p>
+              </div>
+              <ThemeToggle />
             </div>
           </div>
         </nav>

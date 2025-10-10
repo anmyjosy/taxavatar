@@ -20,7 +20,10 @@ export const Welcome = ({ disabled, startButtonText, onStartCall }: WelcomeProps
   return (
     <section
       className={cn(
-        'bg-background fixed inset-0 mx-auto flex h-svh flex-col items-center justify-center overflow-hidden',
+        'fixed inset-0 mx-auto flex h-svh flex-col items-center justify-center overflow-hidden',
+        'bg-background', // default for dark
+        'dark:bg-background', // explicitly for dark
+        'bg-gradient-to-br from-[#f8f4ff] via-[#f1e6ff] to-[#e4d3f6] dark:bg-none', // remove gradient in dark mode
         disabled ? 'pointer-events-none z-10 opacity-50' : 'z-20'
       )}
     >

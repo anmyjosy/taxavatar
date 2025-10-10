@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { MonitorIcon, MoonIcon, SunIcon } from '@phosphor-icons/react';
+import { MoonIcon, SunIcon } from '@phosphor-icons/react';
 import type { ThemeMode } from '@/lib/types';
 import { THEME_MEDIA_QUERY, THEME_STORAGE_KEY, cn } from '@/lib/utils';
 
@@ -52,48 +52,35 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
   const [theme, setTheme] = useState<ThemeMode | undefined>(undefined);
 
   useEffect(() => {
-    const storedTheme = (localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode) ?? 'system';
-
-    setTheme(storedTheme);
+    // Set initial theme based on localStorage or system preference
+    const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode | null;
+    if (storedTheme) {
+      setTheme(storedTheme);
+    } else {
+      const systemTheme = window.matchMedia(THEME_MEDIA_QUERY).matches ? 'dark' : 'light';
+      setTheme(systemTheme);
+      applyTheme(systemTheme);
+    }
   }, []);
 
-  function handleThemeChange(theme: ThemeMode) {
-    applyTheme(theme);
-    setTheme(theme);
+  function handleThemeChange() {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    applyTheme(newTheme);
+    setTheme(newTheme);
   }
 
   return (
-    <div
+    <button
+      type="button"
+      onClick={handleThemeChange}
       className={cn(
-        'text-foreground bg-background flex w-full flex-row justify-end divide-x overflow-hidden rounded-full border',
+        'bg-background text-foreground hover:bg-muted flex h-8 w-8 items-center justify-center rounded-full border transition-colors hover:cursor-pointer',
         className
       )}
     >
-      <span className="sr-only">Color scheme toggle</span>
-      <button
-        type="button"
-        onClick={() => handleThemeChange('dark')}
-        className="cursor-pointer p-1 pl-1.5"
-      >
-        <span className="sr-only">Enable dark color scheme</span>
-        <MoonIcon size={16} weight="bold" className={cn(theme !== 'dark' && 'opacity-25')} />
-      </button>
-      <button
-        type="button"
-        onClick={() => handleThemeChange('light')}
-        className="cursor-pointer px-1.5 py-1"
-      >
-        <span className="sr-only">Enable light color scheme</span>
-        <SunIcon size={16} weight="bold" className={cn(theme !== 'light' && 'opacity-25')} />
-      </button>
-      <button
-        type="button"
-        onClick={() => handleThemeChange('system')}
-        className="cursor-pointer p-1 pr-1.5"
-      >
-        <span className="sr-only">Enable system color scheme</span>
-        <MonitorIcon size={16} weight="bold" className={cn(theme !== 'system' && 'opacity-25')} />
-      </button>
-    </div>
+      <span className="sr-only">Toggle theme</span>
+      {theme === 'light' && <MoonIcon size={16} weight="bold" />}
+      {theme === 'dark' && <SunIcon size={16} weight="bold" />}
+    </button>
   );
 }

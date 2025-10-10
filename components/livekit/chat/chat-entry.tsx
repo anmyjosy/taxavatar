@@ -50,7 +50,9 @@ export const ChatEntry = ({
       <span
         className={cn(
           'max-w-4/5 rounded-[20px] p-2',
-          isUser ? 'bg-primary text-primary-foreground ml-auto' : 'mr-auto bg-[gray] text-[white]'
+          isUser
+            ? `text-primary-foreground dark:bg-primary ml-auto bg-blue-300`
+            : 'mr-auto bg-slate-200 text-slate-900 dark:bg-[gray] dark:text-[white]'
         )}
       >
         {message}

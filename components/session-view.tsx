@@ -123,7 +123,7 @@ export const SessionView = ({
       {isMobile && chatOpen && (
         <ChatMessageView
           className={cn(
-            'bg-background/40 flex flex-col rounded-2xl border border-white/10 shadow-xl backdrop-blur-xl transition-all duration-300 ease-out',
+            'dark:bg-background/30 flex flex-col rounded-2xl border border-white/30 bg-gray-300 shadow-xl backdrop-blur-xl transition-all duration-300 ease-out',
             'fixed right-0 bottom-[6rem] left-0 z-40 mx-4 h-[45vh] translate-y-0 opacity-100 delay-200'
           )}
         >
@@ -168,8 +168,8 @@ export const SessionView = ({
       {!isMobile && (
         <ChatMessageView
           className={cn(
-            'transition-all duration-300 ease-out',
-            'bg-background/30 flex flex-col rounded-2xl border border-white/10 backdrop-blur-xl',
+            'dark:bg-background/30',
+            'flex flex-col rounded-2xl border border-white/30 bg-gray-300 backdrop-blur-xl transition-all duration-300 ease-out',
             chatOpen
               ? 'relative h-2/3 w-1/3 flex-1 translate-x-0 p-4 opacity-100 delay-200 md:mt-16'
               : 'absolute w-full -translate-x-full opacity-0'

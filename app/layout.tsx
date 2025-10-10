@@ -44,7 +44,7 @@ interface RootLayoutProps {
 
 export async function generateMetadata(): Promise<Metadata> {
   const hdrs = await headers();
-  const { pageTitle, pageDescription } = await getAppConfig(hdrs); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const { pageTitle, pageDescription } = await getAppConfig(hdrs);
   return {
     title: pageTitle,
     description: pageDescription,
