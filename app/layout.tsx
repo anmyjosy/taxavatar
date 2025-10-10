@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Public_Sans } from 'next/font/google';
 import localFont from 'next/font/local';
 import { headers } from 'next/headers';
@@ -41,9 +42,18 @@ interface RootLayoutProps {
   children: React.ReactNode;
 }
 
+export async function generateMetadata(): Promise<Metadata> {
+  const hdrs = await headers();
+  const { pageTitle, pageDescription } = await getAppConfig(hdrs); // eslint-disable-line @typescript-eslint/no-unused-vars
+  return {
+    title: pageTitle,
+    description: pageDescription,
+  };
+}
+
 export default async function RootLayout({ children }: RootLayoutProps) {
   const hdrs = await headers();
-  const { accent, accentDark, pageTitle, pageDescription } = await getAppConfig(hdrs);
+  const { accent, accentDark } = await getAppConfig(hdrs);
 
   // check provided accent colors against defaults, and apply styles if they differ (or in development mode)
   // generate a hover color for the accent color by mixing it with 20% black
@@ -62,8 +72,6 @@ export default async function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning className="scroll-smooth">
       <head>
         {styles && <style>{styles}</style>}
-        <title>{pageTitle}</title>
-        <meta name="description" content={pageDescription} />
         <ApplyThemeScript />
       </head>
       <body
