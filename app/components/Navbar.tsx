@@ -51,7 +51,7 @@ export const Navbar = () => {
                   className={cn(
                     'relative rounded-lg object-contain transition-all duration-300',
                     resolvedTheme === 'light'
-                      ? 'h-24 w-24' // A little bigger in light mode
+                      ? 'h-27 w-30' // A little bigger in light mode
                       : 'h-20 w-20' // Original size for dark mode
                   )}
                   priority
