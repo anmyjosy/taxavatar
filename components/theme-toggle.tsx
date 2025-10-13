@@ -1,72 +1,30 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTheme } from 'next-themes';
 import { MoonIcon, SunIcon } from '@phosphor-icons/react';
-import type { ThemeMode } from '@/lib/types';
-import { THEME_MEDIA_QUERY, THEME_STORAGE_KEY, cn } from '@/lib/utils';
-
-const THEME_SCRIPT = `
-  const doc = document.documentElement;
-  const theme = localStorage.getItem("${THEME_STORAGE_KEY}") ?? "system";
-
-  if (theme === "system") {
-    if (window.matchMedia("${THEME_MEDIA_QUERY}").matches) {
-      doc.classList.add("dark");
-    } else {
-      doc.classList.add("light");
-    }
-  } else {
-    doc.classList.add(theme);
-  }
-`
-  .trim()
-  .replace(/\n/g, '')
-  .replace(/\s+/g, ' ');
-
-function applyTheme(theme: ThemeMode) {
-  const doc = document.documentElement;
-
-  doc.classList.remove('dark', 'light');
-  localStorage.setItem(THEME_STORAGE_KEY, theme);
-
-  if (theme === 'system') {
-    if (window.matchMedia(THEME_MEDIA_QUERY).matches) {
-      doc.classList.add('dark');
-    } else {
-      doc.classList.add('light');
-    }
-  } else {
-    doc.classList.add(theme);
-  }
-}
+import { cn } from '@/lib/utils';
 
 interface ThemeToggleProps {
   className?: string;
 }
 
-export function ApplyThemeScript() {
-  return <script id="theme-script">{THEME_SCRIPT}</script>;
-}
-
 export function ThemeToggle({ className }: ThemeToggleProps) {
-  const [theme, setTheme] = useState<ThemeMode | undefined>(undefined);
+  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme, setTheme } = useTheme();
 
   useEffect(() => {
-    // Set initial theme based on localStorage or system preference
-    const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode | null;
-    if (storedTheme) {
-      setTheme(storedTheme);
-    } else {
-      const systemTheme = window.matchMedia(THEME_MEDIA_QUERY).matches ? 'dark' : 'light';
-      setTheme(systemTheme);
-      applyTheme(systemTheme);
-    }
+    setMounted(true);
   }, []);
 
   function handleThemeChange() {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    applyTheme(newTheme);
+    const newTheme = resolvedTheme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
+  }
+
+  // Avoid rendering button until mounted to prevent hydration mismatch
+  if (!mounted) {
+    return <div className={cn('bg-muted h-8 w-8 rounded-full border', className)} />;
   }
 
   return (
@@ -79,8 +37,8 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
       )}
     >
       <span className="sr-only">Toggle theme</span>
-      {theme === 'light' && <MoonIcon size={16} weight="bold" />}
-      {theme === 'dark' && <SunIcon size={16} weight="bold" />}
+      {resolvedTheme === 'light' && <MoonIcon size={16} weight="bold" />}
+      {resolvedTheme === 'dark' && <SunIcon size={16} weight="bold" />}
     </button>
   );
 }
