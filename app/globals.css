@@ -1,7 +1,9 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+/* prettier-ignore-start */
 @custom-variant dark (&:is(.dark *));
+/* prettier-ignore-end */
 
 :root {
   --fg0: #000000;
@@ -282,4 +284,3 @@
   scrollbar-width: thin;
   scrollbar-color: rgba(128, 128, 128, 0.6) transparent;
 }
-
