@@ -155,7 +155,7 @@ export const SessionView = ({
           layout
           animate={{
             x: chatOpen && !isMobile ? AVATAR_SHIFT : 0,
-            y: chatOpen && isMobile ? 10 : 0, // small gentle lift
+            y: chatOpen && isMobile ? -10 : 0, // small gentle lift
             scale: 1, // 👈 keep constant on mobile to avoid snap
           }}
           transition={{
