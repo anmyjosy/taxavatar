@@ -1,21 +1,47 @@
-import React, { type ElementType } from 'react';
+import React, { type ElementType, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Bot, Brain, MessageCircle, Smile } from 'lucide-react';
+import { Bot, Brain, LogIn, MessageCircle, Smile } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { supabase } from '@/lib/supabase';
 import { cn } from '@/lib/utils';
+import { toastAlert } from './alert-toast';
 
 interface WelcomeProps {
   disabled: boolean;
-  startButtonText: string;
+  isLoggedIn: boolean;
+  isConnecting: boolean;
+  onLoginSuccess: () => void;
   onStartCall: () => void;
 }
 
-export const Welcome = ({ disabled, startButtonText, onStartCall }: WelcomeProps) => {
+export const Welcome = ({
+  disabled,
+  isLoggedIn,
+  isConnecting,
+  onLoginSuccess,
+  onStartCall,
+}: WelcomeProps) => {
   const features = [
     { icon: Smile, text: 'Lifelike Animation' },
     { icon: MessageCircle, text: 'Real-time Conversation' },
     { icon: Brain, text: 'Emotional Expression' },
   ];
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) {
+      toastAlert({ title: error.message || 'Invalid email or password' });
+    } else {
+      onLoginSuccess();
+      setIsLoginOpen(false);
+    }
+  };
 
   return (
     <section
@@ -84,12 +110,36 @@ export const Welcome = ({ disabled, startButtonText, onStartCall }: WelcomeProps
               <Button
                 variant="default"
                 size="lg"
-                onClick={onStartCall}
-                className="shadow-elegant group relative h-12 overflow-hidden border-0 bg-gradient-to-r from-[#552483] to-purple-600 px-10 text-sm text-white hover:brightness-110"
+                onClick={isLoggedIn ? onStartCall : () => setIsLoginOpen(true)}
+                disabled={isConnecting}
+                className="shadow-elegant group relative flex h-12 w-48 items-center justify-center overflow-hidden border-0 bg-gradient-to-r from-[#552483] to-purple-600 px-10 text-sm text-white hover:brightness-110"
               >
                 <span className="relative z-10 flex items-center gap-3 font-medium">
-                  <Bot className="h-5 w-5" strokeWidth={2} />
-                  {startButtonText}
+                  {isConnecting ? (
+                    <svg
+                      className="h-5 w-5 animate-spin text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  ) : (
+                    <LogIn className="h-5 w-5" strokeWidth={2} />
+                  )}
+                  {isConnecting ? 'Connecting...' : isLoggedIn ? 'Start Call' : 'Login'}
                 </span>
                 <div className="absolute inset-0 translate-x-[-150%] -skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-[150%]" />
               </Button>
@@ -99,6 +149,128 @@ export const Welcome = ({ disabled, startButtonText, onStartCall }: WelcomeProps
           </div>
         </motion.div>
       </div>
+
+      {/* Login modal */}
+      {isLoginOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+          onClick={() => setIsLoginOpen(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="relative w-[360px] overflow-hidden rounded-2xl border border-purple-500/20 bg-gradient-to-br from-slate-900/90 via-purple-900/15 to-slate-900/90 p-6 shadow-2xl backdrop-blur-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Decorative gradient */}
+            <div className="pointer-events-none absolute top-0 left-0 h-full w-full bg-gradient-to-br from-purple-500/5 to-transparent" />
+
+            {/* Close button */}
+            <button
+              onClick={() => setIsLoginOpen(false)}
+              className="absolute top-3 right-3 text-gray-400 transition-colors hover:text-white"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            {/* Header */}
+            <div className="relative mb-5 text-center">
+              <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full bg-purple-500/20">
+                <svg
+                  className="h-6 w-6 text-purple-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+              </div>
+              <h2 className="mb-1 text-2xl font-bold text-white">Welcome Back</h2>
+              <p className="text-xs text-gray-400">Enter your credentials to continue</p>
+            </div>
+
+            {/* Email input */}
+            <div className="relative mb-4">
+              <label className="mb-1.5 block text-xs font-medium text-gray-300">
+                Email Address
+              </label>
+              <div className="relative">
+                <input
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                  className="w-full rounded-lg border border-purple-500/20 bg-slate-800/50 px-3 py-2.5 pl-9 text-sm text-white placeholder-gray-500 transition-all focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/50 focus:outline-none"
+                />
+                <svg
+                  className="absolute top-2.5 left-3 h-4 w-4 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Password input */}
+            <div className="relative mb-5">
+              <label className="mb-1.5 block text-xs font-medium text-gray-300">Password</label>
+              <div className="relative">
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                  className="w-full rounded-lg border border-purple-500/20 bg-slate-800/50 px-3 py-2.5 pl-9 text-sm text-white placeholder-gray-500 transition-all focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/50 focus:outline-none"
+                />
+                <svg
+                  className="absolute top-2.5 left-3 h-4 w-4 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Login button */}
+            <button
+              onClick={handleLogin}
+              className="mb-3 flex w-full transform items-center justify-center rounded-lg bg-gradient-to-r from-purple-600 to-purple-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 transition-all hover:scale-[1.02] hover:from-purple-500 hover:to-purple-600 active:scale-[0.98]"
+            >
+              Login
+            </button>
+          </motion.div>
+        </motion.div>
+      )}
     </section>
   );
 };
@@ -115,24 +287,8 @@ const WelcomeBackground = () => (
 
       {/* Dot grid pattern */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.2)_1px,transparent_1px)] bg-[size:40px_40px] opacity-[0.15]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_0.5px_0.5px,rgba(255,255,255,0.1)_0.5px,transparent_0.5px)] bg-[size:20px_20px] opacity-[0.2]" />
       </div>
-
-      {/* Animated lines */}
-      <svg className="absolute inset-0 h-full w-full opacity-20" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
-            <path
-              d="M 60 0 L 0 0 0 60"
-              fill="none"
-              stroke="#552483"
-              strokeWidth="0.5"
-              opacity="0.5"
-            />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#grid)" />
-      </svg>
     </div>
 
     {/* Floating particles */}
@@ -241,26 +397,3 @@ const FeaturePill = ({ icon: Icon, text, index }: FeaturePillProps) => (
 );
 
 export default Welcome;
-
-/*
-Original component for reference before refactoring.
-
-export const Welcome_Original = ({
-  disabled,
-  startButtonText,
-  onStartCall,
-}: WelcomeProps) => {
-  const features = [
-    { icon: Brain, text: 'Advanced AI Processing' },
-    { icon: Activity, text: 'Real-time Voice Analysis' },
-    { icon: Cpu, text: 'Neural Network Integration' },
-  ];
-
-  return (
-    <section
-      className={cn(
-        'bg-background dark:bg-background light:bg-[#e4d3f6] fixed inset-0 mx-auto flex h-svh flex-col items-center justify-center overflow-hidden',
-        disabled ? 'z-10 pointer-events-none opacity-50' : 'z-20'
-      )}
-    >
-*/

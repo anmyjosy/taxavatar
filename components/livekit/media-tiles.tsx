@@ -78,10 +78,7 @@ export function MediaTiles({ chatOpen }: MediaTilesProps) {
   const isCameraEnabled = cameraTrack && !cameraTrack.publication.isMuted;
   const isScreenShareEnabled = screenShareTrack && !screenShareTrack.publication.isMuted;
 
-  const transition = {
-    ...animationProps.transition,
-    delay: chatOpen ? 0 : 0.15,
-  };
+  const transition = { ...animationProps.transition, delay: 0 };
 
   const agentAnimate = {
     ...animationProps.animate,

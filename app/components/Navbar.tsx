@@ -19,7 +19,7 @@ export const Navbar = () => {
   const logoSrc =
     mounted && resolvedTheme
       ? resolvedTheme === 'light'
-        ? '/10xds-blacklogo.png'
+        ? '/10xds-tm-small2d.svg'
         : '/10xDS-logo.svg'
       : '/10xDS-logo.svg'; // fallback during SSR
 
@@ -36,11 +36,7 @@ export const Navbar = () => {
         >
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <motion.div
-              className="flex items-center gap-3"
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-            >
+            <motion.div className="flex items-center gap-3">
               <div className="relative">
                 <div className="bg-gradient-primary absolute inset-0 rounded-lg opacity-20 blur-lg" />
                 <Image

@@ -8,18 +8,24 @@ import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 interface ToastProps {
   id: string | number;
   title: ReactNode;
-  description: ReactNode;
+  description?: ReactNode;
 }
 
-export function toastAlert(toast: Omit<ToastProps, 'id'>) {
+interface ToastAlertOptions {
+  title?: ReactNode;
+  description?: ReactNode;
+}
+
+export function toastAlert(options: ToastAlertOptions = {}) {
+  const { title = 'Agent Connection Error', description } = options;
   return sonnerToast.custom(
-    (id) => <AlertToast id={id} title={toast.title} description={toast.description} />,
-    { duration: 10_000 }
+    (id) => <AlertToast id={id} title={title} description={description} />,
+    { duration: 5_000 }
   );
 }
 
 function AlertToast(props: ToastProps) {
-  const { title, description, id } = props;
+  const { title, id, description } = props;
 
   return (
     <Alert onClick={() => sonnerToast.dismiss(id)} className="bg-accent">

@@ -24,7 +24,7 @@ export interface AgentControlBarProps
  * A control bar specifically designed for voice assistant interfaces
  */
 export function AgentControlBar({
-  controls,
+  capabilities,
   saveUserChoices = true,
   className,
   onChatOpenChange,
@@ -33,7 +33,10 @@ export function AgentControlBar({
 }: AgentControlBarProps) {
   const participants = useRemoteParticipants();
   const [chatOpen, setChatOpen] = React.useState(false);
-
+  const controls: UseAgentControlBarProps['controls'] = {
+    microphone: capabilities.supportsVideoInput,
+    chat: capabilities.supportsChatInput,
+  };
   const isAgentAvailable = participants.some((p) => p.isAgent);
 
   const [isDisconnecting, setIsDisconnecting] = React.useState(false);
