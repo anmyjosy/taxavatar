@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (& :is(.dark *));
 
 :root {
   --fg0: #000000;
@@ -282,4 +282,3 @@
   scrollbar-width: thin;
   scrollbar-color: rgba(128, 128, 128, 0.6) transparent;
 }
-
