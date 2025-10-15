@@ -25,7 +25,12 @@ export const Navbar = () => {
   return (
     <>
       <header className="glass border-border/20 fixed top-0 right-0 left-0 z-50">
-        <nav className={cn('container mx-auto', resolvedTheme === 'light' ? 'px-4' : 'px-4 py-3')}>
+        <nav
+          className={cn(
+            'container mx-auto',
+            resolvedTheme === 'light' ? '-mt-2 px-4' : 'px-4 py-3'
+          )}
+        >
           <div className="flex items-center justify-between">
             {/* Logo */}
             <div
@@ -37,9 +42,9 @@ export const Navbar = () => {
                   src={logoSrc}
                   alt="10xds Logo"
                   className={cn(
-                    'relative rounded-lg object-contain transition-all duration-300',
+                    'relative rounded-lg object-contain',
                     resolvedTheme === 'light'
-                      ? 'h-28 w-31' // A little bigger in light mode
+                      ? 'h-30 w-34' // A little bigger in light mode
                       : 'h-20 w-20' // Original size for dark mode
                   )}
                   priority
