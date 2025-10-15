@@ -1,12 +1,12 @@
-import React, { useEffect, useRef } from "react";
-import { type TrackReference } from "@livekit/components-react";
-import { cn } from "@/lib/utils";
+import React, { useEffect, useRef } from 'react';
+import { type TrackReference } from '@livekit/components-react';
+import { cn } from '@/lib/utils';
 
 interface VoiceVisualizerProps extends React.HTMLAttributes<HTMLDivElement> {
   trackRef: TrackReference;
 }
 
-export function VoiceVisualizer({ trackRef, className, ...props }: VoiceVisualizerProps) {
+export function VoiceVisualizer({ trackRef, className }: VoiceVisualizerProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export function VoiceVisualizer({ trackRef, className, ...props }: VoiceVisualiz
 
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d")!;
+    const ctx = canvas.getContext('2d')!;
     let animationFrame: number;
 
     const resizeCanvas = () => {
@@ -34,10 +34,13 @@ export function VoiceVisualizer({ trackRef, className, ...props }: VoiceVisualiz
       canvas.height = canvas.offsetHeight;
     };
     resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener('resize', resizeCanvas);
 
     const draw = () => {
       // Get color from CSS custom property
+      const style = getComputedStyle(canvas);
+      const barColor = style.getPropertyValue('--visualizer-color').trim() || 'white';
+
       analyser.getByteFrequencyData(dataArray);
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -48,12 +51,12 @@ export function VoiceVisualizer({ trackRef, className, ...props }: VoiceVisualiz
 
       for (let i = 0; i < bufferLength; i++) {
         // keep bars small (max 30% of canvas height)
-        let barHeight = ((dataArray[i] / 255) * canvas.height) * 0.3;
+        let barHeight = (dataArray[i] / 255) * canvas.height * 0.3;
 
         // ensure at least baseline height
         barHeight = Math.max(barHeight, minHeight);
 
-        ctx.fillStyle = getComputedStyle(canvas).getPropertyValue('--visualizer-color').trim() || 'white';
+        ctx.fillStyle = barColor;
         ctx.beginPath();
         ctx.roundRect(
           x,
@@ -74,17 +77,14 @@ export function VoiceVisualizer({ trackRef, className, ...props }: VoiceVisualiz
 
     return () => {
       cancelAnimationFrame(animationFrame);
-      window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener('resize', resizeCanvas);
       audioContext.close();
     };
   }, [trackRef]);
 
   return (
-    <div className={cn("w-full flex justify-center mt-4", className)} {...props}>
-      <canvas
-        ref={canvasRef}
-        className="w-2/5 h-16 rounded-full bg-transparent"
-      />
+    <div className={cn('mt-4 flex w-full justify-center', className)}>
+      <canvas ref={canvasRef} className="h-16 w-2/5 rounded-full bg-transparent" />
     </div>
   );
 }
