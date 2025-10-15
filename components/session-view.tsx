@@ -80,6 +80,16 @@ export const SessionView = ({
     }
   }, [agentState, sessionStarted, room]);
 
+  useEffect(() => {
+    if (sessionStarted) {
+      const timer = setTimeout(() => {
+        room.localParticipant.setMicrophoneEnabled(true);
+      }, 5000); // 10 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [sessionStarted, room]);
+
   const isConnecting = agentState === 'connecting';
   const { supportsChatInput, supportsVideoInput } = appConfig;
   const capabilities: AgentControlBarProps['capabilities'] = {

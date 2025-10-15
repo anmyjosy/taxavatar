@@ -162,7 +162,7 @@ export const Welcome = ({
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative w-[360px] overflow-hidden rounded-2xl border border-purple-500/20 bg-gradient-to-br from-slate-900/90 via-purple-900/15 to-slate-900/90 p-6 shadow-2xl backdrop-blur-xl"
+            className="relative w-11/12 max-w-[360px] overflow-hidden rounded-2xl border border-purple-500/20 bg-gradient-to-br from-slate-900/90 via-purple-900/15 to-slate-900/90 p-6 shadow-2xl backdrop-blur-xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Decorative gradient */}
