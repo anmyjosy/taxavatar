@@ -26,26 +26,23 @@ function isAgentAvailable(agentState: AgentState) {
   return agentState === 'listening' || agentState === 'thinking' || agentState === 'speaking';
 }
 
-function useIsMobile(width = 740) {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < width);
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [width]);
-  return isMobile;
-}
+function useMediaQueries() {
+  const [sizes, setSizes] = useState({ width: 0, height: 0 });
 
-function useIsShort(height = 700) {
-  const [isShort, setIsShort] = useState(false);
   useEffect(() => {
-    const handleResize = () => setIsShort(window.innerHeight < height);
+    const handleResize = () => {
+      setSizes({ width: window.innerWidth, height: window.innerHeight });
+    };
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [height]);
-  return isShort;
+  }, []);
+
+  return {
+    isMobile: sizes.width < 740,
+    isShort: sizes.height < 694, // Reverted to simpler logic
+    ...sizes,
+  };
 }
 
 interface SessionViewProps {
@@ -65,8 +62,7 @@ export const SessionView = ({
   const { messages, send } = useChatAndTranscription();
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const room = useRoomContext();
-  const isShort = useIsShort();
-  const isMobile = useIsMobile();
+  const { isMobile, isShort, height } = useMediaQueries();
 
   useDebugMode({
     enabled: process.env.NODE_ENV !== 'production',
@@ -91,28 +87,6 @@ export const SessionView = ({
       return () => clearTimeout(timeout);
     }
   }, [agentState, sessionStarted, room]);
-
-  useEffect(() => {
-    if (sessionStarted) {
-      // Immediately enable microphone
-      room.localParticipant.setMicrophoneEnabled(true);
-
-      // Mute after 1ms
-      const muteTimer = setTimeout(() => {
-        room.localParticipant.setMicrophoneEnabled(true);
-      }, 1);
-
-      // Unmute after 5 seconds
-      const unmuteTimer = setTimeout(() => {
-        room.localParticipant.setMicrophoneEnabled(true);
-      }, 5000);
-
-      return () => {
-        clearTimeout(muteTimer);
-        clearTimeout(unmuteTimer);
-      };
-    }
-  }, [sessionStarted, room]);
 
   const isConnecting = agentState === 'connecting';
   const { supportsChatInput, supportsVideoInput } = appConfig;
@@ -184,8 +158,8 @@ export const SessionView = ({
           layout
           animate={{
             x: chatOpen && !isMobile ? AVATAR_SHIFT : 0,
-            y: chatOpen && isMobile ? -4 : 0, // small gentle lift
-            scale: 1, // 👈 keep constant on mobile to avoid snap
+            y: chatOpen && isMobile && height > 735 ? 40 : 0, // 64px which is equivalent to 4rem
+            scale: chatOpen && isMobile && height > 735 ? 1.1 : 1,
           }}
           transition={{
             ...motionTransition,
