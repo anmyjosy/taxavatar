@@ -83,8 +83,8 @@ export const Welcome = ({
       <motion.div
         className="relative z-10 mx-auto max-w-5xl origin-center px-8"
         animate={{
-          scale: isMobile ? (isVeryShort ? 0.75 : 0.85) : 1,
-          paddingTop: isMobile ? (isShort ? '2rem' : '4rem') : '4rem',
+          scale: isMobile ? (isVeryShort ? 0.8 : 0.9) : 1,
+          paddingTop: isMobile ? (isShort ? '2rem' : '3rem') : '4rem',
         }}
         transition={{ duration: 0.4, ease: 'easeInOut' }}
       >
@@ -103,14 +103,26 @@ export const Welcome = ({
             transition={{ delay: 0.4 }}
             className="mb-6"
           >
-            <h1 className="text-foreground/90 mb-2 text-4xl font-light tracking-tight sm:text-5xl md:text-6xl">
+            <h1
+              className={cn(
+                'text-foreground/90 mb-2 font-light tracking-tight',
+                isMobile
+                  ? 'text-[2rem]' // bigger title on mobile
+                  : 'text-4xl sm:text-5xl md:text-6xl'
+              )}
+            >
               <span>Avatar</span>
               <span className="font-normal text-[#552483]"> AI</span>
             </h1>
             <div className="mx-auto h-[1px] w-24 bg-gradient-to-r from-transparent via-[#552483] to-transparent" />
           </motion.div>
 
-          <p className="text-muted-foreground mx-auto max-w-xl text-sm leading-relaxed font-light md:text-base">
+          <p
+            className={cn(
+              'text-muted-foreground mx-auto max-w-xl leading-relaxed font-light',
+              isMobile ? 'text-base' : 'text-sm md:text-base'
+            )}
+          >
             Experience the future of conversational AI with lifelike avatars, ultra-low latency, and
             natural interactions.
           </p>
@@ -127,7 +139,13 @@ export const Welcome = ({
           transition={{ delay: 0.5, duration: 0.8 }}
         >
           {features.map((feature, index) => (
-            <FeaturePill key={index} index={index} icon={feature.icon} text={feature.text} />
+            <FeaturePill
+              key={index}
+              index={index}
+              icon={feature.icon}
+              text={feature.text}
+              isMobile={isMobile}
+            />
           ))}
         </motion.div>
 
@@ -147,7 +165,12 @@ export const Welcome = ({
                 size="lg"
                 onClick={isLoggedIn ? onStartCall : () => setIsLoginOpen(true)}
                 disabled={isConnecting}
-                className="shadow-elegant group relative flex h-12 w-44 items-center justify-center overflow-hidden border-0 bg-gradient-to-r from-[#552483] to-purple-600 px-8 text-sm text-white hover:brightness-110 md:w-48 md:px-10"
+                className={cn(
+                  'shadow-elegant group relative flex items-center justify-center overflow-hidden border-0 bg-gradient-to-r from-[#552483] to-purple-600 text-white hover:brightness-110',
+                  isMobile
+                    ? 'h-14 w-56 px-10 text-base' // larger button for mobile
+                    : 'h-12 w-44 px-8 text-sm md:w-48 md:px-10'
+                )}
               >
                 <span className="relative z-10 flex items-center gap-3 font-medium">
                   {isConnecting ? (
@@ -412,9 +435,10 @@ interface FeaturePillProps {
   icon: ElementType;
   text: string;
   index: number;
+  isMobile?: boolean;
 }
 
-const FeaturePill = ({ icon: Icon, text, index }: FeaturePillProps) => (
+const FeaturePill = ({ icon: Icon, text, index, isMobile }: FeaturePillProps) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -422,10 +446,18 @@ const FeaturePill = ({ icon: Icon, text, index }: FeaturePillProps) => (
     className="group border-foreground/10 bg-background/20 hover:bg-background/40 flex items-center gap-2 rounded-full border px-3 py-1.5 backdrop-blur-md transition-all duration-500 hover:border-[#552483]/3"
   >
     <Icon
-      className="h-3 w-3 text-[#552483]/70 transition-colors group-hover:text-[#552483] md:h-4 md:w-4"
+      className={cn(
+        'text-[#552483]/70 transition-colors group-hover:text-[#552483]',
+        isMobile ? 'h-4 w-4' : 'h-3 w-3 md:h-4 md:w-4'
+      )}
       strokeWidth={1.5}
     />
-    <span className="muted-foreground group-hover:text-foreground text-xs font-light transition-colors">
+    <span
+      className={cn(
+        'muted-foreground group-hover:text-foreground font-light transition-colors',
+        isMobile ? 'text-sm' : 'text-xs md:text-sm'
+      )}
+    >
       {text}
     </span>
   </motion.div>
