@@ -99,7 +99,7 @@ export const SessionView = ({
 
       // Mute after 1ms
       const muteTimer = setTimeout(() => {
-        room.localParticipant.setMicrophoneEnabled(false);
+        room.localParticipant.setMicrophoneEnabled(true);
       }, 1);
 
       // Unmute after 5 seconds
@@ -184,7 +184,7 @@ export const SessionView = ({
           layout
           animate={{
             x: chatOpen && !isMobile ? AVATAR_SHIFT : 0,
-            y: chatOpen && isMobile ? -10 : 0, // small gentle lift
+            y: chatOpen && isMobile ? -4 : 0, // small gentle lift
             scale: 1, // 👈 keep constant on mobile to avoid snap
           }}
           transition={{
