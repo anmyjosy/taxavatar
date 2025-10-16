@@ -52,8 +52,8 @@ export const Welcome = ({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const isMobile = useIsMobile();
-  const isShort = useIsShort(700);
-  const isVeryShort = useIsShort(600);
+  const isShort = useIsShort(600);
+  const isVeryShort = useIsShort(639);
 
   const handleLogin = async () => {
     const { error } = await supabase.auth.signInWithPassword({
@@ -71,7 +71,7 @@ export const Welcome = ({
   return (
     <section
       className={cn(
-        'fixed inset-0 flex flex-col items-center justify-start overflow-x-hidden overflow-y-auto',
+        'fixed inset-0 flex flex-col items-center justify-start overflow-hidden',
         'bg-background',
         'dark:bg-background',
         'bg-gradient-to-br from-[#f8f4ff] via-[#f1e6ff] to-[#e4d3f6] dark:bg-none',
