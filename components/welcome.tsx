@@ -1,4 +1,4 @@
-import React, { type ElementType, useState } from 'react';
+import React, { type ElementType, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Bot, Brain, LogIn, MessageCircle, Smile } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,17 @@ interface WelcomeProps {
   isConnecting: boolean;
   onLoginSuccess: () => void;
   onStartCall: () => void;
+}
+
+function useIsMobile(width = 768) {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < width);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [width]);
+  return isMobile;
 }
 
 export const Welcome = ({
@@ -29,6 +40,7 @@ export const Welcome = ({
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const isMobile = useIsMobile();
 
   const handleLogin = async () => {
     const { error } = await supabase.auth.signInWithPassword({
@@ -46,16 +58,20 @@ export const Welcome = ({
   return (
     <section
       className={cn(
-        'fixed inset-0 mx-auto flex h-svh flex-col items-center justify-center overflow-hidden',
-        'bg-background', // default for dark
-        'dark:bg-background', // explicitly for dark
-        'bg-gradient-to-br from-[#f8f4ff] via-[#f1e6ff] to-[#e4d3f6] dark:bg-none', // remove gradient in dark mode
+        'fixed inset-0 flex flex-col items-center justify-start overflow-auto pt-16',
+        'bg-background',
+        'dark:bg-background',
+        'bg-gradient-to-br from-[#f8f4ff] via-[#f1e6ff] to-[#e4d3f6] dark:bg-none',
         disabled ? 'pointer-events-none z-10 opacity-50' : 'z-20'
       )}
     >
       <WelcomeBackground />
 
-      <div className="relative z-10 mx-auto max-w-5xl px-8">
+      <motion.div
+        className="relative z-10 mx-auto max-w-5xl origin-center px-8"
+        animate={{ scale: isMobile ? 0.85 : 1 }}
+        transition={{ duration: 0.4, ease: 'easeInOut' }}
+      >
         <WelcomeLogo />
 
         {/* Title Section */}
@@ -71,14 +87,14 @@ export const Welcome = ({
             transition={{ delay: 0.4 }}
             className="mb-6"
           >
-            <h1 className="text-foreground/90 mb-2 text-5xl font-light tracking-tight md:text-6xl">
+            <h1 className="text-foreground/90 mb-2 text-4xl font-light tracking-tight sm:text-5xl md:text-6xl">
               <span>Avatar</span>
               <span className="font-normal text-[#552483]"> AI</span>
             </h1>
             <div className="mx-auto h-[1px] w-24 bg-gradient-to-r from-transparent via-[#552483] to-transparent" />
           </motion.div>
 
-          <p className="text-muted-foreground mx-auto max-w-xl text-base leading-relaxed font-light">
+          <p className="text-muted-foreground mx-auto max-w-xl text-sm leading-relaxed font-light md:text-base">
             Experience the future of conversational AI with lifelike avatars, ultra-low latency, and
             natural interactions.
           </p>
@@ -112,7 +128,7 @@ export const Welcome = ({
                 size="lg"
                 onClick={isLoggedIn ? onStartCall : () => setIsLoginOpen(true)}
                 disabled={isConnecting}
-                className="shadow-elegant group relative flex h-12 w-48 items-center justify-center overflow-hidden border-0 bg-gradient-to-r from-[#552483] to-purple-600 px-10 text-sm text-white hover:brightness-110"
+                className="shadow-elegant group relative flex h-12 w-44 items-center justify-center overflow-hidden border-0 bg-gradient-to-r from-[#552483] to-purple-600 px-8 text-sm text-white hover:brightness-110 md:w-48 md:px-10"
               >
                 <span className="relative z-10 flex items-center gap-3 font-medium">
                   {isConnecting ? (
@@ -148,7 +164,7 @@ export const Welcome = ({
             {/* Secondary action */}
           </div>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Login modal */}
       {isLoginOpen && (
@@ -342,11 +358,11 @@ const WelcomeLogo = () => (
     />
 
     {/* Hexagon container */}
-    <div className="relative mx-auto h-28 w-28">
+    <div className="relative mx-auto h-24 w-24 md:h-28 md:w-28">
       <div className="absolute inset-0 rotate-45 rounded-2xl bg-gradient-to-r from-[#552483] to-purple-600 opacity-10" />
       <div className="bg-background/30 absolute inset-0 rotate-45 rounded-2xl border border-[#552483]/20 backdrop-blur-xl" />
       <div className="absolute inset-0 flex items-center justify-center">
-        <Bot className="relative z-10 h-10 w-10 text-[#552483]" strokeWidth={1.5} />
+        <Bot className="relative z-10 h-9 w-9 text-[#552483] md:h-10 md:w-10" strokeWidth={1.5} />
       </div>
 
       {/* Orbiting elements */}
@@ -365,7 +381,7 @@ const WelcomeLogo = () => (
         >
           <div
             className="bg-primary/60 absolute h-2 w-2 rounded-full"
-            style={{ transform: 'translateX(44px)' }}
+            style={{ transform: 'translateX(44px)' }} // This could also be made responsive if needed
           />
         </motion.div>
       ))}
@@ -384,13 +400,13 @@ const FeaturePill = ({ icon: Icon, text, index }: FeaturePillProps) => (
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay: 0.6 + index * 0.1 }}
-    className="group bg-background/20 border-foreground/10 hover:bg-background/40 flex items-center gap-2 rounded-full border px-4 py-2 backdrop-blur-md transition-all duration-500 hover:border-[#552483]/30"
+    className="group border-foreground/10 bg-background/20 hover:bg-background/40 flex items-center gap-2 rounded-full border px-3 py-1.5 backdrop-blur-md transition-all duration-500 hover:border-[#552483]/3"
   >
     <Icon
-      className="h-4 w-4 text-[#552483]/70 transition-colors group-hover:text-[#552483]"
+      className="h-3 w-3 text-[#552483]/70 transition-colors group-hover:text-[#552483] md:h-4 md:w-4"
       strokeWidth={1.5}
     />
-    <span className="text-muted-foreground group-hover:text-foreground text-xs font-light transition-colors">
+    <span className="muted-foreground group-hover:text-foreground text-xs font-light transition-colors">
       {text}
     </span>
   </motion.div>

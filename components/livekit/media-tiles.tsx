@@ -187,7 +187,7 @@ export function MediaTiles({ chatOpen }: MediaTilesProps) {
                     <div className="flex w-full justify-center">
                       <VoiceVisualizer
                         trackRef={micTrack}
-                        className="[--visualizer-color:black] dark:[--visualizer-color:white]"
+                        className="mt-4 [--visualizer-color:black] dark:[--visualizer-color:white]"
                       />
                     </div>
                   )}

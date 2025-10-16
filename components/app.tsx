@@ -92,9 +92,12 @@ export function App({ appConfig }: AppProps) {
 
       await room.connect(connectionDetails.serverUrl, connectionDetails.participantToken);
 
+      // enable mic after successful connection but keep it muted
+      await room.localParticipant.setMicrophoneEnabled(false);
+
       // Wait for the agent's video track to become available, with retries.
       let attempts = 0;
-      const maxAttempts = 3;
+      const maxAttempts = 4;
       while (attempts < maxAttempts) {
         try {
           await new Promise<void>((resolve, reject) => {
@@ -137,9 +140,6 @@ export function App({ appConfig }: AppProps) {
           }
         }
       }
-
-      // enable mic after successful connection
-      await room.localParticipant.setMicrophoneEnabled(false);
 
       // ✅ finally move to session view
       setSessionStarted(true);

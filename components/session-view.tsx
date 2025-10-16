@@ -75,18 +75,30 @@ export const SessionView = ({
       const timeout = setTimeout(() => {
         toastAlert({ title: 'Agent connection timed out due to inactivity.' });
         room.disconnect();
-      }, 60000);
+      }, 100000);
       return () => clearTimeout(timeout);
     }
   }, [agentState, sessionStarted, room]);
 
   useEffect(() => {
     if (sessionStarted) {
-      const timer = setTimeout(() => {
-        room.localParticipant.setMicrophoneEnabled(true);
-      }, 5000); // 10 seconds
+      // Immediately enable microphone
+      room.localParticipant.setMicrophoneEnabled(true);
 
-      return () => clearTimeout(timer);
+      // Mute after 1ms
+      const muteTimer = setTimeout(() => {
+        room.localParticipant.setMicrophoneEnabled(false);
+      }, 1);
+
+      // Unmute after 5 seconds
+      const unmuteTimer = setTimeout(() => {
+        room.localParticipant.setMicrophoneEnabled(true);
+      }, 5000);
+
+      return () => {
+        clearTimeout(muteTimer);
+        clearTimeout(unmuteTimer);
+      };
     }
   }, [sessionStarted, room]);
 

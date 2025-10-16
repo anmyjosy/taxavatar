@@ -13,14 +13,19 @@ export const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({ trackRef, clas
   return (
     <BarVisualizer
       trackRef={trackRef}
-      className={cn('flex aspect-video w-40 items-center justify-center gap-1', className)}
+      barCount={20}
+      className={cn('flex h-8 w-full items-center justify-center gap-1', className)}
+      options={{ minHeight: 8, maxHeight: 32 }}
     >
       <span
         className={cn([
-          'bg-muted h-2 w-2 rounded-full',
-          'origin-center transition-colors duration-250 ease-linear',
-          'data-[lk-highlighted=true]:bg-foreground data-[lk-muted=true]:bg-muted',
+          'block w-[6px] rounded-full bg-[var(--visualizer-color,white)]',
+          'transition-all duration-200 ease-out',
         ])}
+        style={{
+          height: '5px',
+          width: '3px',
+        }}
       />
     </BarVisualizer>
   );
