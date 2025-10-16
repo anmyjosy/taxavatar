@@ -37,6 +37,17 @@ function useIsMobile(width = 740) {
   return isMobile;
 }
 
+function useIsShort(height = 700) {
+  const [isShort, setIsShort] = useState(false);
+  useEffect(() => {
+    const handleResize = () => setIsShort(window.innerHeight < height);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [height]);
+  return isShort;
+}
+
 interface SessionViewProps {
   appConfig: AppConfig;
   disabled: boolean;
@@ -54,6 +65,7 @@ export const SessionView = ({
   const { messages, send } = useChatAndTranscription();
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const room = useRoomContext();
+  const isShort = useIsShort();
   const isMobile = useIsMobile();
 
   useDebugMode({
@@ -135,7 +147,8 @@ export const SessionView = ({
             exit={{ y: '110%', opacity: 0 }}
             transition={motionTransition}
             className={cn(
-              'dark:bg-background/30 fixed right-0 bottom-[6rem] left-0 z-40 mx-4 flex h-[45vh] flex-col rounded-2xl border border-white/30 bg-gray-300 shadow-xl backdrop-blur-xl'
+              'dark:bg-background/30 fixed right-0 bottom-[6rem] left-0 z-40 mx-4 flex flex-col rounded-2xl border border-white/30 bg-gray-300 shadow-xl backdrop-blur-xl',
+              isShort ? 'h-[40vh]' : 'h-[320px]'
             )}
           >
             <div
@@ -157,7 +170,11 @@ export const SessionView = ({
             </div>
 
             <div className="bg-background/70 border-t border-white/10 p-3 backdrop-blur-lg">
-              <ChatInput onSend={handleSendMessage} disabled={!isAgentAvailable(agentState)} />
+              <ChatInput
+                onSend={handleSendMessage}
+                disabled={!isAgentAvailable(agentState)}
+                className="text-base"
+              />
             </div>
           </ChatMessageView>
         )}

@@ -25,6 +25,17 @@ function useIsMobile(width = 768) {
   return isMobile;
 }
 
+function useIsShort(height = 700) {
+  const [isShort, setIsShort] = useState(false);
+  useEffect(() => {
+    const handleResize = () => setIsShort(window.innerHeight < height);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [height]);
+  return isShort;
+}
+
 export const Welcome = ({
   disabled,
   isLoggedIn,
@@ -41,6 +52,8 @@ export const Welcome = ({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const isMobile = useIsMobile();
+  const isShort = useIsShort(700);
+  const isVeryShort = useIsShort(600);
 
   const handleLogin = async () => {
     const { error } = await supabase.auth.signInWithPassword({
@@ -58,7 +71,7 @@ export const Welcome = ({
   return (
     <section
       className={cn(
-        'fixed inset-0 flex flex-col items-center justify-start overflow-auto pt-16',
+        'fixed inset-0 flex flex-col items-center justify-start overflow-x-hidden overflow-y-auto',
         'bg-background',
         'dark:bg-background',
         'bg-gradient-to-br from-[#f8f4ff] via-[#f1e6ff] to-[#e4d3f6] dark:bg-none',
@@ -69,7 +82,10 @@ export const Welcome = ({
 
       <motion.div
         className="relative z-10 mx-auto max-w-5xl origin-center px-8"
-        animate={{ scale: isMobile ? 0.85 : 1 }}
+        animate={{
+          scale: isMobile ? (isVeryShort ? 0.75 : 0.85) : 1,
+          paddingTop: isMobile ? (isShort ? '2rem' : '4rem') : '4rem',
+        }}
         transition={{ duration: 0.4, ease: 'easeInOut' }}
       >
         <WelcomeLogo />
@@ -79,7 +95,7 @@ export const Welcome = ({
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
-          className="mb-16 text-center"
+          className={cn('text-center', isMobile && isShort ? 'mb-8' : 'mb-16')}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -102,7 +118,10 @@ export const Welcome = ({
 
         {/* Feature Pills */}
         <motion.div
-          className="mb-16 flex flex-wrap justify-center gap-3"
+          className={cn(
+            'flex flex-wrap justify-center gap-3',
+            isMobile && isShort ? 'mb-8' : 'mb-16'
+          )}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.8 }}

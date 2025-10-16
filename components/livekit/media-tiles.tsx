@@ -59,6 +59,23 @@ function useIsMobile(width = 740) {
   return isMobile;
 }
 
+function useIsShort(height = 570) {
+  const [isShort, setIsShort] = useState(false);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsShort(window.innerHeight < height);
+    }
+
+    handleResize(); // Set initial value
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, [height]);
+
+  return isShort;
+}
+
 interface MediaTilesProps {
   chatOpen: boolean;
 }
@@ -71,6 +88,7 @@ export function MediaTiles({ chatOpen }: MediaTilesProps) {
   } = useVoiceAssistant();
 
   const isMobile = useIsMobile();
+  const isShort = useIsShort(570);
   const micTrack = useLocalTrackRef(Track.Source.Microphone);
   const [screenShareTrack] = useTracks([Track.Source.ScreenShare]);
   const cameraTrack: TrackReference | undefined = useLocalTrackRef(Track.Source.Camera);
@@ -118,7 +136,7 @@ export function MediaTiles({ chatOpen }: MediaTilesProps) {
                     transition={transition}
                     videoTrack={agentVideoTrack}
                     state={agentState}
-                    className="h-40 w-40"
+                    className={cn(isShort ? 'h-24 w-24' : 'h-40 w-40')}
                   />
                 )}
               </AnimatePresence>
