@@ -87,6 +87,12 @@ export const SessionView = ({
       return () => clearTimeout(timeout);
     }
   }, [agentState, sessionStarted, room]);
+  useEffect(() => {
+    if (sessionStarted) {
+      // Immediately enable microphone
+      room.localParticipant.setMicrophoneEnabled(true);
+    }
+  }, [sessionStarted, room]);
 
   const isConnecting = agentState === 'connecting';
   const { supportsChatInput, supportsVideoInput } = appConfig;

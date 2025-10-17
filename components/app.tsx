@@ -93,7 +93,7 @@ export function App({ appConfig }: AppProps) {
       await room.connect(connectionDetails.serverUrl, connectionDetails.participantToken);
 
       // enable mic after successful connection but keep it muted
-      await room.localParticipant.setMicrophoneEnabled(true);
+      await room.localParticipant.setMicrophoneEnabled(false);
 
       // Wait for the agent's video track to become available, with retries.
       let attempts = 0;
