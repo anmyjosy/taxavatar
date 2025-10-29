@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 import { ThemeProvider } from 'next-themes';
-import { Public_Sans } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 import { headers } from 'next/headers';
 import { getAppConfig } from '@/lib/utils';
 import './globals.css';
 
-const publicSans = Public_Sans({
-  variable: '--font-public-sans',
+const inter = Inter({
   subsets: ['latin'],
+  variable: '--font-sans',
 });
 
 const commitMono = localFont({
@@ -58,9 +58,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning className="scroll-smooth">
       <head>{styles && <style>{styles}</style>}</head>
-      <body
-        className={`${publicSans.variable} ${commitMono.variable} overflow-x-hidden antialiased`}
-      >
+      <body className={`${inter.variable} ${commitMono.variable} overflow-x-hidden antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>
