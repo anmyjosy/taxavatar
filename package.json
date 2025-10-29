@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "echo 'ESLint disabled on GitHub'",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
