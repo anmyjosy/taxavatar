@@ -62,7 +62,6 @@ export const Navbar = () => {
                   Enterprise Intelligence
                 </p>
               </div>
-              <ThemeToggle />
             </div>
           </div>
         </nav>

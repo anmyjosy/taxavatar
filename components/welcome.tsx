@@ -59,15 +59,7 @@ export const Welcome = ({
       </div>
 
       {/* ===== Hero Section ===== */}
-      <main className="relative z-10 flex flex-col items-start justify-center flex-1 max-w-6xl px-16 py-16">
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="inline-flex items-center gap-2 rounded-full border border-[#552483]/50 bg-[#552483]/20 px-4 py-2 backdrop-blur-sm"
-        >
-        </motion.div>
+      <main className="relative z-10 flex flex-col items-center justify-center flex-1 max-w-6xl px-6 py-16 text-center md:items-start md:px-16 md:text-left">
 
         {/* Title */}
         <motion.div
@@ -82,7 +74,7 @@ export const Welcome = ({
               AI Advisor
             </span>
           </h1>
-          <div className="h-1 w-24 bg-gradient-to-r from-[#552483] to-transparent mb-6" />
+          <div className="h-1 w-24 bg-gradient-to-r from-[#552483] to-transparent mb-6 mx-auto md:mx-0" />
         </motion.div>
 
         {/* Description */}
@@ -90,7 +82,7 @@ export const Welcome = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="max-w-2xl text-xl text-white/80 leading-relaxed mb-10"
+          className="max-w-2xl text-base leading-relaxed text-white/80 md:text-xl mb-10"
         >
           Revolutionize your tax strategy with AI-powered insights. Get real-time
           compliance updates, smart calculations, and personalized financial guidance.
@@ -101,7 +93,7 @@ export const Welcome = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="flex flex-wrap items-center gap-4"
+          className="flex flex-wrap items-center justify-center gap-4 md:justify-start"
         >
           <Button
             size="lg"
